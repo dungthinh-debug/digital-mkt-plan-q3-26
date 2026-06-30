@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ViewSonic Vietnam – Kế Hoạch Fanpage Q3 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f2f5;color:#1a1a2e}
+.header{background:linear-gradient(135deg,#c8102e 0%,#8b0000 100%);color:#fff;padding:20px 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.header h1{font-size:1.3rem;font-weight:700;letter-spacing:.5px}
+.header p{font-size:.8rem;opacity:.85;margin-top:2px}
+.progress-bar{height:6px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:10px;overflow:hidden}
+.progress-fill{height:100%;background:#fff;border-radius:3px;transition:width .4s}
+.stats-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.stat{background:rgba(255,255,255,.18);border-radius:6px;padding:4px 10px;font-size:.72rem;white-space:nowrap}
+.controls{background:#fff;padding:14px 20px;border-bottom:1px solid #e0e0e0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;position:sticky;top:0;z-index:90}
+.controls.below-header{top:106px}
+.filter-btn{border:1.5px solid #ddd;background:#f8f8f8;border-radius:20px;padding:5px 14px;font-size:.78rem;cursor:pointer;transition:all .2s;font-weight:500}
+.filter-btn:hover,.filter-btn.active{border-color:#c8102e;background:#c8102e;color:#fff}
+.month-section{padding:16px 20px 0}
+.month-title{font-size:1.1rem;font-weight:700;color:#c8102e;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #c8102e}
+.week-group{margin-bottom:18px}
+.week-label{font-size:.75rem;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+.post-card{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);border-left:4px solid #ccc;transition:box-shadow .2s;position:relative}
+.post-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.13)}
+.post-card.today{outline:2px solid #f59e0b;outline-offset:2px}
+.post-card.done{opacity:.55}
+.card-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.type-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.type-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.session-badge{margin-left:auto;font-size:.68rem;padding:2px 8px;border-radius:10px;font-weight:600}
+.badge-am{background:#dbeafe;color:#1e40af}
+.badge-pm{background:#fef3c7;color:#92400e}
+.post-date{font-size:.72rem;color:#888}
+.post-headline{font-weight:700;font-size:.9rem;margin-bottom:6px;line-height:1.35}
+.post-content{font-size:.8rem;color:#444;line-height:1.55;white-space:pre-line;display:none}
+.post-content.expanded{display:block}
+.card-actions{display:flex;gap:6px;margin-top:8px}
+.btn-sm{border:none;border-radius:6px;padding:4px 10px;font-size:.72rem;cursor:pointer;font-weight:600}
+.btn-expand{background:#f0f2f5;color:#444}
+.btn-copy{background:#e8f5e9;color:#2e7d32}
+.btn-done{background:#fff3e0;color:#e65100}
+.post-card.done .btn-done{background:#e8f5e9;color:#2e7d32}
+.no-results{text-align:center;padding:40px;color:#888;font-size:.95rem}
+
+/* TYPE COLORS */
+.type-PRODUCT{border-left-color:#c8102e}.dot-PRODUCT{background:#c8102e}
+.type-LED{border-left-color:#d97706}.dot-LED{background:#d97706}
+.type-VIEWBOARD{border-left-color:#7c3aed}.dot-VIEWBOARD{background:#7c3aed}
+.type-PROJECTOR{border-left-color:#065f46}.dot-PROJECTOR{background:#065f46}
+.type-TIPS{border-left-color:#0ea5e9}.dot-TIPS{background:#0ea5e9}
+.type-ENGAGE{border-left-color:#ec4899}.dot-ENGAGE{background:#ec4899}
+.type-EDU{border-left-color:#14b8a6}.dot-EDU{background:#14b8a6}
+
+.label-PRODUCT{color:#c8102e}
+.label-LED{color:#d97706}
+.label-VIEWBOARD{color:#7c3aed}
+.label-PROJECTOR{color:#065f46}
+.label-TIPS{color:#0ea5e9}
+.label-ENGAGE{color:#ec4899}
+.label-EDU{color:#14b8a6}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🗓️ ViewSonic Vietnam – Kế Hoạch Fanpage Q3 2026</h1>
+  <p>100 bài · 2 bài/ngày · Thứ 2 – Thứ 6 · 1 Jul – 8 Sep 2026</p>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="stats-row" id="statsRow"></div>
+</div>
+<div class="controls below-header" id="filterBar"></div>
+<div id="content"></div>
+
+<script>
+const TYPES = {
+  PRODUCT:  {label:'Màn Hình',    color:'#c8102e'},
+  LED:      {label:'LED Display', color:'#d97706'},
+  VIEWBOARD:{label:'ViewBoard',   color:'#7c3aed'},
+  PROJECTOR:{label:'Máy Chiếu',   color:'#065f46'},
+  TIPS:     {label:'Tips',        color:'#0ea5e9'},
+  ENGAGE:   {label:'Engage',      color:'#ec4899'},
+  EDU:      {label:'EDU',         color:'#14b8a6'},
+};
+
+const S = [
+// ===== THÁNG 7 =====
+// Jul 1 (T4)
+{date:'2026-07-01',s:'AM',type:'TIPS',h:'5 điều cần biết khi chọn màn hình gaming đầu tiên',c:`🎮 Mua màn hình gaming lần đầu? Đừng để bị overwhelmed!
+
+5 điều quan trọng nhất:
+1️⃣ Refresh rate: 144Hz là minimum cho gaming mượt
+2️⃣ Panel: IPS cho màu đẹp, TN cho response nhanh nhất
+3️⃣ Resolution: 1080p đủ dùng, 1440p tốt hơn nếu budget cho phép
+4️⃣ Response time: 1ms-4ms là lý tưởng
+5️⃣ Kích thước: 24-27" là sweet spot cho góc nhìn gaming
+
+ViewSonic có đầy đủ từ entry-level đến gaming pro.
+
+👉 viewsonic.com/vn/products/lcd/gaming
+
+#ViewSonicVietnam #GamingMonitor #MuaMànHình #Tips #Gaming`},
+
+{date:'2026-07-01',s:'PM',type:'VIEWBOARD',h:'ViewBoard – Bảng tương tác thông minh thay đổi cách dạy và họp',c:`🖥️ Không còn bảng đen, không còn slide tĩnh.
+
+ViewBoard là màn hình tương tác 4K cảm ứng đa điểm, tích hợp Android, camera, mic, và phần mềm myViewBoard — tất cả trong một thiết bị.
+
+✅ Dùng cho: Giáo dục, doanh nghiệp, đào tạo
+✅ Kích thước: 55" – 110"
+✅ EDLA-certified — chuẩn doanh nghiệp Google
+✅ Tương tác đa điểm, viết tay tự nhiên
+
+ViewSonic ViewBoard — thay đổi không gian học và làm việc.
+
+👉 viewsonic.com/vn/products/viewboard
+
+#ViewSonicVietnam #ViewBoard #SmartBoard #InteractiveDisplay #EdTech`},
+
+// Jul 2 (T5)
+{date:'2026-07-02',s:'AM',type:'ENGAGE',h:'Bạn đang dùng màn hình bao nhiêu Hz? 🎮',c:`Poll thứ 5: Refresh rate của màn hình bạn đang dùng?
+
+🔵 60Hz – Vẫn ổn, nhưng muốn upgrade
+🟢 144Hz – Ngon rồi, mượt lắm
+🟡 165-240Hz – Competitive gamer đây
+🔴 280Hz+ – Pro player chính hiệu
+
+Comment để ViewSonic tư vấn nâng cấp phù hợp! 👇
+
+#ViewSonicVietnam #Poll #GamingMonitor #RefreshRate`},
+
+{date:'2026-07-02',s:'PM',type:'EDU',h:'IPS, VA hay TN – Chọn panel nào cho đúng?',c:`📚 Giải thích nhanh 3 loại panel phổ biến:
+
+🔷 TN (Twisted Nematic)
+- Response time nhanh nhất (1ms)
+- Màu sắc & góc nhìn kém hơn
+- Phù hợp: Gaming competitive
+
+🔷 IPS (In-Plane Switching)  
+- Màu sắc chính xác, góc nhìn rộng 178°
+- Response time 4-8ms (đã cải thiện nhiều)
+- Phù hợp: Design, gaming, đa dụng
+
+🔷 VA (Vertical Alignment)
+- Contrast ratio cao nhất (3000:1+)
+- Black level tốt nhất
+- Phù hợp: Xem phim, multimedia
+
+ViewSonic có cả 3 loại panel với nhiều phân khúc giá.
+
+#ViewSonicVietnam #EDU #IPS #TN #VA #MànHìnhMáyTính`},
+
+// Jul 3 (T6)
+{date:'2026-07-03',s:'AM',type:'PRODUCT',h:'ViewSonic XG2737 – Gaming 27" 165Hz IPS mượt như mơ',c:`🎮 Mở màn Gaming Season tháng 7 với XG2737!
+
+ViewSonic XG2737 – Màn hình gaming 27" IPS siêu mượt:
+✅ 27 inch | IPS Panel | 2K QHD (2560x1440)
+✅ 165Hz refresh rate | 1ms MPRT
+✅ AMD FreeSync Premium – chống xé hình
+✅ HDR10 | sRGB 99% – màu sắc rực rỡ
+✅ Thiết kế RGB gaming, chân đế điều chỉnh linh hoạt
+
+Giá tốt cho một màn gaming 2K IPS 165Hz.
+
+📍 Xem tại hệ thống đại lý ViewSonic toàn quốc
+👉 viewsonic.com/vn/products/lcd/XG2737
+
+#ViewSonicVietnam #XG2737 #GamingMonitor #165Hz #2K #IPS`},
+
+{date:'2026-07-03',s:'PM',type:'PROJECTOR',h:'ViewSonic LS Series – Máy chiếu laser 60,000 giờ',c:`🔦 ViewSonic Luminous Superior (LS) Series – Máy chiếu laser thế hệ mới
+
+Tại sao laser thắng bóng đèn truyền thống:
+✅ 20,000 – 60,000 giờ tuổi thọ nguồn sáng
+✅ Khởi động tức thì, không warm-up
+✅ Độ sáng ổn định suốt vòng đời sản phẩm
+✅ Tiết kiệm 49% điện so với lamp projector cùng lumen
+
+ViewSonic LS Series: từ 4,000 đến 8,500 ANSI Lumens, phủ mọi nhu cầu từ phòng họp đến giảng đường lớn.
+
+👉 viewsonic.com/vn/products/projectors
+
+#ViewSonicVietnam #Projector #LaserProjector #LSSeries #Business #Education`},
+
+// Jul 6 (T2)
+{date:'2026-07-06',s:'AM',type:'TIPS',h:'3 setting màn hình gaming bạn nên chỉnh ngay hôm nay',c:`⚡ Tuần mới, tips mới!
+
+Bạn đã tối ưu màn hình gaming chưa? 3 setting thường bị bỏ qua:
+
+1️⃣ Bật FreeSync/G-Sync
+→ Vào Settings > Display > Adaptive Sync
+→ Loại bỏ xé hình ngay lập tức
+
+2️⃣ Chỉnh Overdrive đúng mức
+→ Medium/Normal thường là tối ưu
+→ Quá cao gây inverse ghosting
+
+3️⃣ Calibrate brightness theo ánh sáng phòng
+→ Phòng tối: 80-100 nits
+→ Phòng sáng: 200-300 nits
+
+Áp dụng 3 cái này, gaming sẽ khác ngay!
+
+#ViewSonicVietnam #Tips #GamingMonitor #Settings #Optimize`},
+
+{date:'2026-07-06',s:'PM',type:'ENGAGE',h:'Bạn chơi game thể loại nào nhiều nhất? 🎮',c:`Thứ 2 đầu tuần, khởi động nhẹ với poll!
+
+Game thể loại yêu thích của bạn?
+
+🔫 FPS/Tactical (CS2, Valorant, Apex)
+⚔️ MOBA (LoL, Dota 2, HoK)
+🏎️ Racing / Sports
+🌍 RPG / Open World
+
+Comment model màn hình bạn đang dùng để chơi thể loại đó! 🎮
+
+#ViewSonicVietnam #Gaming #Poll #Gamer`},
+
+// Jul 7 (T3)
+{date:'2026-07-07',s:'AM',type:'PRODUCT',h:'ViewSonic VX2537 – 25" 100Hz IPS giá tốt nhất phân khúc',c:`💰 Ngân sách không nhiều nhưng vẫn muốn màn hình chất?
+
+ViewSonic VX2537 – Entry gaming không phải compromise:
+✅ 25 inch | IPS Panel | Full HD (1920x1080)
+✅ 100Hz refresh rate – mượt hơn 60Hz chuẩn
+✅ 4ms response time (MPRT 1ms)
+✅ AMD FreeSync – không xé hình
+✅ 2x HDMI + 1x DisplayPort
+✅ Viền mỏng 3 cạnh – setup đẹp
+
+Entry level thật sự xứng đáng từ ViewSonic.
+
+📍 Liên hệ đại lý ViewSonic gần nhất
+👉 viewsonic.com/vn/products/lcd/VX2537
+
+#ViewSonicVietnam #VX2537 #EntryGaming #100Hz #IPS #MànHình`},
+
+{date:'2026-07-07',s:'PM',type:'TIPS',h:'Vì sao nhiều game thủ giỏi vẫn thua? – Không phải do skill',c:`🤔 Bạn đã play 1000 giờ nhưng vẫn không rank up?
+
+Có thể màn hình đang kéo bạn xuống:
+
+❌ Input lag cao (50ms+) → bạn thấy hành động sau khi xảy ra
+❌ 60Hz → nhân vật di chuyển giật cục, khó aim
+❌ Ghosting → target mờ khi di chuyển nhanh
+
+✅ Giải pháp:
+→ Màn gaming 144Hz+ giảm input lag rõ rệt
+→ 1ms response time loại ghosting
+→ FreeSync/G-Sync đồng bộ frame rate
+
+ViewSonic XG Series – thiết kế để win.
+
+#ViewSonicVietnam #Tips #Gaming #Performance #GamingMonitor`},
+
+// Jul 8 (T4)
+{date:'2026-07-08',s:'AM',type:'LED',h:'Direct View LED – Màn hình hiển thị thế hệ mới cho không gian lớn',c:`💡 Direct View LED (dvLED) – Không phải TV lớn, đây là công nghệ khác hoàn toàn.
+
+ViewSonic dvLED Series:
+✅ Không giới hạn kích thước – từ 100" đến hàng chục mét
+✅ Không có bezel – seamless, đẹp tuyệt đối
+✅ Độ sáng 1,000–5,000+ nits – rõ trong mọi điều kiện ánh sáng
+✅ Tuổi thọ 100,000+ giờ
+✅ Dùng cho: Digital signage, corporate lobby, events, giảng đường
+
+ViewSonic LED giải quyết bài toán hiển thị quy mô lớn mà LCD không thể.
+
+👉 viewsonic.com/vn/products/direct-view-led
+
+#ViewSonicVietnam #DVLED #LEDDisplay #CommercialDisplay #DigitalSignage`},
+
+{date:'2026-07-08',s:'PM',type:'EDU',h:'Response time vs Refresh rate – Hai thông số khác nhau hoàn toàn',c:`📚 Nhiều người nhầm lẫn 2 thông số này:
+
+⚡ REFRESH RATE (Hz)
+= Số lần màn hình vẽ lại hình mỗi giây
+→ 144Hz = 144 frames/giây
+→ Quan trọng hơn để game mượt
+
+⏱️ RESPONSE TIME (ms)
+= Thời gian pixel chuyển từ màu này sang màu khác
+→ 1ms nhanh hơn 8ms
+→ Quan trọng để giảm ghosting/blur
+
+Cả 2 đều quan trọng. Nhưng nếu phải ưu tiên: refresh rate trước.
+
+ViewSonic XG Series: 144-280Hz + 1ms response time.
+
+#ViewSonicVietnam #EDU #RefreshRate #ResponseTime #MànHìnhGaming`},
+
+// Jul 9 (T5)
+{date:'2026-07-09',s:'AM',type:'VIEWBOARD',h:'ViewBoard trong lớp học – Giáo viên dạy khác, học sinh học khác',c:`🎓 Khi giáo viên có thể viết tay trực tiếp lên bài giảng đang chiếu, kéo video vào slide, và cả lớp cùng tương tác lên màn hình — đó là lớp học với ViewBoard.
+
+📚 myViewBoard Classroom:
+✅ Chia sẻ màn hình với học sinh real-time
+✅ Quiz tương tác tích hợp
+✅ Lưu toàn bộ nội dung bài học lên cloud
+
+🖥️ ViewBoard IFP Series: 65" / 75" / 86" / 98"
+✅ 4K UHD | Cảm ứng 40 điểm | Android EDLA
+
+Giáo dục hiện đại bắt đầu từ thiết bị đúng.
+
+👉 viewsonic.com/vn/education
+
+#ViewSonicVietnam #ViewBoard #GiáoDục #SmartClassroom #EdTech`},
+
+{date:'2026-07-09',s:'PM',type:'ENGAGE',h:'Dream gaming setup của bạn trông như thế nào? 🖥️',c:`Thứ 5 thả thính setup dream nhé!
+
+Mô tả dream gaming setup của bạn:
+🖥️ Màn hình: ____"  ____Hz
+💻 PC/Laptop: ____
+🎧 Headset: ____
+⌨️ Keyboard: ____
+
+Tag bạn bè và share setup hiện tại của bạn nhé! 📸
+
+ViewSonic sẽ pick 1 comment hay nhất để tặng quà cuối tuần 🎁
+
+#ViewSonicVietnam #GamingSetup #DreamSetup #Gaming`},
+
+// Jul 10 (T6)
+{date:'2026-07-10',s:'AM',type:'PRODUCT',h:'ViewSonic VX2766-2K-Pro-9 – 27" 2K 100Hz IPS hoàn hảo cho dân sáng tạo & gaming',c:`🎨 Vừa game vừa design? Đây là màn hình dành cho bạn!
+
+ViewSonic VX2766-2K-Pro-9:
+✅ 27 inch | IPS Panel | 2K QHD (2560x1440)
+✅ 100Hz refresh rate | 4ms response time
+✅ sRGB 103% – màu chuẩn cho design
+✅ Delta E < 2 – factory calibrated
+✅ USB-C 65W charging – một dây cho tất cả
+✅ Eye Care – chống mỏi mắt khi làm việc dài
+
+Đầu tư đúng một lần cho cả công việc lẫn giải trí.
+
+👉 viewsonic.com/vn/products/lcd/VX2766-2K-Pro-9
+
+#ViewSonicVietnam #VX2766 #CreativeMonitor #2K #USBC #WorkAndPlay`},
+
+{date:'2026-07-10',s:'PM',type:'PROJECTOR',h:'ViewSonic LSD400W – 4,000 ANSI Lumens laser, tiết kiệm 49% điện',c:`⚡ LSD400W – Khi cần máy chiếu mạnh mà vẫn tiết kiệm điện
+
+ViewSonic LSD400W:
+✅ 4,000 ANSI Lumens – đủ sáng không cần kéo rèm
+✅ Laser light source – 30,000 giờ, không thay bóng
+✅ WXGA (1280x800) – phù hợp phòng họp, lớp học
+✅ Tiêu thụ điện thấp hơn 49% so với lamp projector
+✅ Hỗ trợ HDMI, USB, RS-232
+
+Chi phí TCO 5 năm thấp hơn đáng kể so với máy chiếu bóng đèn.
+
+👉 viewsonic.com/vn/products/projectors/LSD400W
+
+#ViewSonicVietnam #LSD400W #LaserProjector #Education #Business #EcoProjector`},
+
+// Jul 13 (T2)
+{date:'2026-07-13',s:'AM',type:'TIPS',h:'5 cách giảm mỏi mắt khi nhìn màn hình cả ngày',c:`👀 Làm việc 8-10 tiếng nhìn màn hình mà không mỏi mắt — có thể không?
+
+5 cách thực tế:
+1️⃣ Rule 20-20-20: Mỗi 20 phút, nhìn vật cách 20 feet trong 20 giây
+2️⃣ Điều chỉnh brightness phù hợp ánh sáng phòng
+3️⃣ Bật Low Blue Light mode khi làm việc buổi tối
+4️⃣ Đặt màn hình cách mắt 50-70cm
+5️⃣ Chọn màn hình có Eye Care certification
+
+ViewSonic Eye Care monitors – certified bảo vệ mắt, không nhấp nháy.
+
+#ViewSonicVietnam #EyeCare #Tips #WorkFromHome #MỏiMắt`},
+
+{date:'2026-07-13',s:'PM',type:'ENGAGE',h:'27 inch hay 24 inch – bạn thích cỡ nào hơn? 📊',c:`Poll cuối tuần: Kích thước màn hình lý tưởng?
+
+24 inch – Gọn, phản ứng nhanh, bàn không chật
+27 inch – Immersive hơn, nhìn rộng hơn  
+32 inch – Màn hình lớn, đa nhiệm tốt
+Ultrawide – Một màn thay hai
+
+Bạn đang dùng cỡ nào và có hài lòng không? 👇
+
+#ViewSonicVietnam #Poll #MonitorSize #MànHình`},
+
+// Jul 14 (T3)
+{date:'2026-07-14',s:'AM',type:'PRODUCT',h:'ViewSonic XG2737 – Gaming 27" 2K cho esports thế hệ tiếp theo',c:`🏆 Gaming Season đang nóng – XG2737 đang chờ bạn!
+
+Round 2 spotlight: ViewSonic XG2737
+✅ 27" | 2K QHD | IPS | 165Hz
+✅ AMD FreeSync Premium
+✅ HDR10 Ready
+✅ 1ms MPRT – xóa bỏ ghosting
+✅ RGB ambient light phía sau
+✅ Ergonomic stand: tilt, swivel, height adjust
+
+Gaming 2K nhưng giá không phải 4K. Đó là ViewSonic.
+
+👉 viewsonic.com/vn/products/lcd/XG2737
+
+#ViewSonicVietnam #XG2737 #Gaming2K #165Hz #QHD`},
+
+{date:'2026-07-14',s:'PM',type:'LED',h:'LDS136-152 – Màn hình LED di động 136 inch thế hệ 4',c:`🚀 Màn hình LED 136 inch CÓ THỂ di chuyển được — và đây là cách nó làm điều đó.
+
+ViewSonic LDS136-152 (4th Gen):
+✅ 136" Direct View LED
+✅ Motorized stand – điều chỉnh chiều cao chỉ bằng nút bấm
+✅ GOB Technology – bảo vệ pixel, chống va đập, IP54
+✅ Cấu trúc module – lắp/tháo nhanh
+✅ Lý tưởng: Events, hội thảo, showroom, pop-up exhibition
+
+Setup trong vài giờ. Di chuyển đến địa điểm tiếp theo.
+
+👉 viewsonic.com/vn/products/direct-view-led
+
+#ViewSonicVietnam #LDS136 #LEDDisplay #MobileLED #Events #Exhibition`},
+
+// Jul 15 (T4)
+{date:'2026-07-15',s:'AM',type:'EDU',h:'FreeSync vs G-Sync – Bạn cần loại nào?',c:`📚 Adaptive sync technology – đây là sự thật:
+
+🔵 AMD FreeSync
+- Miễn phí, không phí license
+- Hoạt động trên card AMD và nhiều card NVIDIA
+- FreeSync Premium: LFC + 120Hz+ mandatory
+- Lựa chọn cho đa số game thủ
+
+🟢 NVIDIA G-Sync
+- NVIDIA kiểm soát chặt chẽ hơn
+- G-Sync Compatible: cơ bản, hoạt động với card NVIDIA
+- G-Sync Ultimate: HDR + high refresh rate cao cấp
+
+✅ Kết luận thực tế: FreeSync Premium đủ tốt cho 95% game thủ.
+
+ViewSonic XG Series: AMD FreeSync Premium tích hợp.
+
+#ViewSonicVietnam #EDU #FreeSync #GSync #Gaming`},
+
+{date:'2026-07-15',s:'PM',type:'VIEWBOARD',h:'ViewBoard trong phòng họp – Không còn "ai kết nối được máy chiếu không?"',c:`🏢 Phòng họp hiện đại không còn phụ thuộc vào 1 sợi HDMI.
+
+ViewBoard cho phòng họp:
+✅ Kết nối USB-C – 1 dây, instant display
+✅ AirSync wireless – share màn hình không dây từ laptop/phone
+✅ Viết tay & annotation trực tiếp trên nội dung đang trình chiếu
+✅ Lưu toàn bộ nội dung họp thành file sau 1 tap
+✅ Camera & mic tích hợp – họp hybrid ngay trên màn hình
+
+🖥️ ViewBoard IFP7551 – 75" cho phòng họp trung bình
+🖥️ ViewBoard IFP8651 – 86" cho hội trường, training room
+
+Họp hiệu quả hơn. Quyết định nhanh hơn.
+
+👉 viewsonic.com/vn/business/solutions/meeting-room
+
+#ViewSonicVietnam #ViewBoard #SmartMeeting #HybridWork #Conference`},
+
+// Jul 16 (T5)
+{date:'2026-07-16',s:'AM',type:'TIPS',h:'Cách chỉnh màu màn hình chuẩn nhất cho design',c:`🎨 Designer mà không calibrate màn hình = làm việc với công cụ sai!
+
+Checklist calibrate nhanh:
+1️⃣ Chọn đúng color profile: sRGB cho web, DCI-P3 cho print/video
+2️⃣ Điều chỉnh White Point: 6500K (D65) cho hầu hết công việc
+3️⃣ Brightness: 80-120 cd/m² cho môi trường có kiểm soát ánh sáng
+4️⃣ Gamma: 2.2 là chuẩn cho display
+
+ViewSonic ColorPro Series: factory-calibrated, Delta E < 2 ngay khi mở hộp.
+
+#ViewSonicVietnam #Tips #ColorCalibration #Design #ColorPro`},
+
+{date:'2026-07-16',s:'PM',type:'PROJECTOR',h:'Máy chiếu ViewSonic cho phòng học – Sáng hơn, rõ hơn, bền hơn',c:`🎓 Phòng học cần máy chiếu khác phòng họp: dùng nhiều giờ/ngày, ngân sách bảo trì hạn chế.
+
+ViewSonic LS/LSD Series cho giáo dục:
+✅ Laser – không thay bóng nhiều năm
+✅ 3,000–5,000 ANSI Lumens – rõ kể cả phòng sáng
+✅ Khởi động nhanh – sẵn sàng sau vài giây
+✅ LAN Control – quản lý nhiều thiết bị từ xa
+✅ 30,000h+ tuổi thọ – giảm chi phí bảo trì
+
+Chi phí thấp hơn đáng kể trong 5 năm so với máy chiếu bóng đèn.
+
+👉 viewsonic.com/vn/products/projectors/education
+
+#ViewSonicVietnam #Projector #Education #LaserProjector #School`},
+
+// Jul 17 (T6)
+{date:'2026-07-17',s:'AM',type:'PRODUCT',h:'ViewSonic VX2757-2K-Pro-4 – 27" 2K IPS không viền, sang trọng',c:`✨ Thiết kế không viền gặp hiệu năng cao cấp.
+
+ViewSonic VX2757-2K-Pro-4:
+✅ 27 inch | IPS | 2K QHD (2560x1440)
+✅ 75Hz – đủ mượt cho work và casual gaming
+✅ Viền cực mỏng 3 cạnh – đẹp cho dual/triple setup
+✅ sRGB 99% | Delta E ≤ 2 – màu chuẩn
+✅ HDMI x2 + DisplayPort x1
+✅ Eye Care – TÜV Rheinland certified
+
+Giá hợp lý cho màn 2K IPS chất lượng cao.
+
+👉 viewsonic.com/vn/products/lcd/VX2757-2K-Pro-4
+
+#ViewSonicVietnam #VX2757 #2K #IPS #Monitor #Design`},
+
+{date:'2026-07-17',s:'PM',type:'ENGAGE',h:'Bạn đang dùng màn hình thương hiệu nào? 🤔',c:`Khảo sát thị trường nhỏ từ ViewSonic!
+
+Bạn đang dùng màn hình thương hiệu nào?
+🔴 ViewSonic
+🔵 Dell / LG
+🟡 Asus / AOC / MSI
+⚪ Samsung / BenQ / Other
+
+Và bạn có hài lòng với nó không?
+Comment lý do nhé — ViewSonic đang lắng nghe! 👂
+
+#ViewSonicVietnam #Poll #Monitor #Survey`},
+
+// Jul 20 (T2)
+{date:'2026-07-20',s:'AM',type:'TIPS',h:'Eye Care Mode – Bật hay tắt? Sự thật về tính năng này',c:`👁️ Eye Care Mode trên màn hình – bạn có biết nó thực sự làm gì không?
+
+2 công nghệ chính:
+🔵 Flicker-Free (DC Dimming)
+→ Loại bỏ flickering ở mọi mức brightness
+→ Quan trọng nhất – flickering là nguyên nhân mỏi mắt số 1
+
+🔵 Low Blue Light
+→ Giảm ánh sáng xanh gây rối loạn giấc ngủ
+→ Nên bật khi dùng buổi tối (sau 8PM)
+
+✅ ViewSonic Eye Care = cả 2, certified bởi TÜV Rheinland.
+
+Nên bật khi: làm việc dài hơn 2 tiếng liên tục.
+
+#ViewSonicVietnam #EyeCare #Tips #Health #Monitor`},
+
+{date:'2026-07-20',s:'PM',type:'ENGAGE',h:'Doanh nghiệp/trường học của bạn đã dùng bảng thông minh chưa? 📊',c:`Khảo sát nhanh cho dân B2B và giáo dục!
+
+Nơi bạn làm việc/học tập đang dùng gì trong phòng họp/lớp học?
+
+📺 TV lớn + HDMI truyền thống
+📽️ Máy chiếu
+🖥️ Màn hình tương tác (bảng thông minh)
+📋 Bảng trắng truyền thống
+
+Bạn có muốn nâng cấp lên bảng thông minh không? Comment để ViewSonic tư vấn giải pháp phù hợp! 👇
+
+#ViewSonicVietnam #ViewBoard #Poll #SmartBoard #Education #Corporate`},
+
+// Jul 21 (T3)
+{date:'2026-07-21',s:'AM',type:'PRODUCT',h:'ViewSonic VX2537 – Entry gaming cho học sinh, sinh viên vừa túi tiền',c:`🎓 Bắt đầu gaming không cần chi nhiều!
+
+ViewSonic VX2537 – lý do nó bán chạy nhất phân khúc:
+✅ 25" IPS – đủ rộng, đủ đẹp
+✅ 100Hz – mượt hơn 60Hz tiêu chuẩn rõ rệt
+✅ AMD FreeSync – loại bỏ xé hình
+✅ Thin bezel – đẹp cho bàn học
+✅ Eye Care – bảo vệ mắt khi học và chơi game
+
+Màn hình đầu tiên nên là thứ đáng tiền — VX2537 là đó.
+
+📍 Có mặt tại đại lý ViewSonic toàn quốc
+👉 viewsonic.com/vn/products/lcd/VX2537
+
+#ViewSonicVietnam #VX2537 #EntryMonitor #StudentGaming #GiáHợpLý`},
+
+{date:'2026-07-21',s:'PM',type:'TIPS',h:'Nên đặt màn hình ở độ cao nào để không đau cổ?',c:`🪑 Ergonomics 101 — cái này ít ai biết mà quan trọng lắm:
+
+❌ Sai: Màn hình quá thấp → cúi cổ → đau cổ, lưng
+❌ Sai: Màn hình quá cao → ngửa cổ → căng vai
+
+✅ Đúng:
+→ Mép trên màn hình ngang tầm mắt hoặc thấp hơn 5-7cm
+→ Khoảng cách mắt: 50-70cm (với 24-27")
+→ Góc nghiêng màn hình: 10-20° ngả về sau
+
+Màn hình ViewSonic WorkPro có stand ergonomic: tilt, swivel, height adjust.
+
+#ViewSonicVietnam #Ergonomics #Tips #WorkFromHome #HealthyWork`},
+
+// Jul 22 (T4)
+{date:'2026-07-22',s:'AM',type:'EDU',h:'HDR có thực sự đáng tiền không?',c:`📚 HDR – Sự thật mà ít ai nói với bạn:
+
+✅ HDR tốt = chênh lệch lớn giữa vùng sáng và tối
+= Màu sắc rực rỡ hơn, detail trong bóng tối rõ hơn
+
+⚠️ Nhưng có HDR "giả":
+- HDR400 (DisplayHDR 400): cải thiện rất ít
+- HDR600+: bắt đầu thấy khác biệt thực sự
+- HDR1000+: wow factor rõ ràng
+
+✅ Kết luận thực tế:
+Nếu màn hình chỉ có HDR400, đừng kỳ vọng quá nhiều.
+Tìm màn hình HDR600+ nếu muốn trải nghiệm thật sự.
+
+ViewSonic XG Series: HDR10 với peak brightness cao.
+
+#ViewSonicVietnam #EDU #HDR #DisplayHDR #Gaming`},
+
+{date:'2026-07-22',s:'PM',type:'LED',h:'LED ViewSonic trong retail – Digital signage làm tăng doanh số như thế nào?',c:`🛍️ Con số không biết nói dối:
+76% quyết định mua hàng xảy ra tại điểm bán.
+Digital signage tác động trực tiếp đến con số đó.
+
+ViewSonic LED cho retail:
+✅ Màu sắc sống động, thu hút ánh nhìn ngay từ xa
+✅ Nội dung cập nhật realtime – flash sale, new arrivals, promotion
+✅ Không flicker – hiển thị đẹp khi quay phim, chụp ảnh cho mạng xã hội
+✅ Vận hành 24/7 – tuổi thọ cao, ít bảo trì
+
+Từ cửa hàng flagship đến trung tâm thương mại.
+
+👉 viewsonic.com/vn/products/direct-view-led
+
+#ViewSonicVietnam #LEDDisplay #Retail #DigitalSignage #CommercialDisplay`},
+
+// Jul 23 (T5)
+{date:'2026-07-23',s:'AM',type:'VIEWBOARD',h:'myViewBoard – Phần mềm đi kèm ViewBoard biến bảng đen thành công cụ sáng tạo',c:`💻 ViewBoard không chỉ là màn hình lớn — đi kèm là cả một hệ sinh thái phần mềm:
+
+🎯 myViewBoard Whiteboard: Vẽ, viết, thêm media không giới hạn
+📚 myViewBoard Classroom: Quản lý lớp học tương tác, quiz realtime
+☁️ Cloud sync – tiếp tục từ thiết bị bất kỳ
+📊 Content library – thư viện tài nguyên giáo dục
+🔒 Quản lý thiết bị tập trung qua ViewSonic Manager
+
+Miễn phí hoàn toàn cho người dùng ViewBoard.
+3 triệu+ người dùng toàn cầu.
+
+👉 myviewboard.com
+
+#ViewSonicVietnam #myViewBoard #ViewBoard #EdTech #SmartBoard`},
+
+{date:'2026-07-23',s:'PM',type:'PROJECTOR',h:'LSD400HD-ST – Short throw, không cần phòng lớn mới chiếu đẹp',c:`📐 Phòng nhỏ + máy chiếu short throw = trải nghiệm lớn không cần không gian lớn
+
+ViewSonic LSD400HD-ST:
+✅ Short throw ratio – 100" từ khoảng cách rất ngắn
+✅ 4,000 ANSI Lumens – sáng rõ không cần tắt đèn hoàn toàn
+✅ Full HD 1080p – sắc nét
+✅ Laser light source – 30,000 giờ
+✅ Phù hợp: phòng họp nhỏ, classroom, showroom
+
+Không cần thiết kế lại phòng. Chỉ cần đúng máy chiếu.
+
+👉 viewsonic.com/vn/products/projectors/LSD400HD-ST
+
+#ViewSonicVietnam #ShortThrow #LSD400ST #Projector #SmallRoom`},
+
+// Jul 24 (T6)
+{date:'2026-07-24',s:'AM',type:'PRODUCT',h:'ViewSonic XG2735-2K – Gaming 27" 2K 170Hz IPS cho competitive player',c:`⚡ Competitive gamer cần màn hình competitive thật sự.
+
+ViewSonic XG2735-2K:
+✅ 27" | IPS | 2K QHD
+✅ 170Hz – nhanh và mượt
+✅ 1ms MPRT – xóa bỏ hoàn toàn ghosting
+✅ AMD FreeSync Premium Pro
+✅ HDR10 | DCI-P3 95%
+✅ 2x USB-A hub – cắm thiết bị ngoại vi tiện lợi
+
+Màu đẹp. Phản ứng nhanh. Đó là XG2735-2K.
+
+👉 viewsonic.com/vn/products/lcd/XG2735-2K
+
+#ViewSonicVietnam #XG2735 #2K #170Hz #CompetitiveGaming #IPS`},
+
+{date:'2026-07-24',s:'PM',type:'ENGAGE',h:'3 câu hỏi để tìm đúng màn hình cho bạn',c:`🤔 Không biết nên mua màn hình nào? Trả lời 3 câu này:
+
+1️⃣ Bạn dùng màn hình để làm gì chủ yếu?
+A. Gaming | B. Design/Edit | C. Work | D. Tất cả
+
+2️⃣ Ngân sách của bạn?
+A. Dưới 4 triệu | B. 4-8 triệu | C. 8-15 triệu | D. 15 triệu+
+
+3️⃣ Kích thước ưu tiên?
+A. 24" | B. 27" | C. 32"+ | D. Không quan trọng
+
+Comment A/B/C/D cho từng câu – ViewSonic sẽ recommend model phù hợp! 👇
+
+#ViewSonicVietnam #MonitorGuide #TưVấn #Engage #Poll`},
+
+// Jul 27 (T2)
+{date:'2026-07-27',s:'AM',type:'TIPS',h:'Cách setup dual monitor đúng chuẩn ergonomic',c:`🖥️🖥️ Dual monitor setup đang ngày càng phổ biến — nhưng nhiều người setup sai!
+
+❌ Sai phổ biến:
+→ 2 màn cùng size nhưng đặt lệch chiều cao
+→ Màn phụ quá xa, phải xoay cổ nhiều
+→ Không cài đặt display scaling đồng nhất
+
+✅ Chuẩn:
+→ Primary monitor thẳng trước mặt
+→ Secondary ở góc 30° bên cạnh
+→ Cùng chiều cao (mép trên ngang nhau)
+→ Dùng monitor arm để điều chỉnh linh hoạt
+
+ViewSonic VG Series: tilt, swivel, height adjust, pivot — lý tưởng cho dual setup.
+
+#ViewSonicVietnam #DualMonitor #Tips #Ergonomics #WorkSetup`},
+
+{date:'2026-07-27',s:'PM',type:'LED',h:'LED vs LCD thương mại – Tại sao doanh nghiệp đang chuyển sang dvLED?',c:`📊 So sánh thẳng thắn cho doanh nghiệp:
+
+                LCD Commercial    |    Direct View LED
+Kích thước:    Giới hạn ~98"      |    Không giới hạn
+Bezel:         Có                  |    Không (seamless)
+Độ sáng:       500–700 nits       |    1,000–5,000+ nits
+Tuổi thọ:      50,000 giờ         |    100,000+ giờ
+Lắp đặt:       Cố định            |    Module, linh hoạt
+
+Cho không gian đòi hỏi visual impact lớn — dvLED là lựa chọn đúng.
+
+ViewSonic LDP, LDE Series – cho mọi quy mô triển khai.
+
+👉 viewsonic.com/vn/products/direct-view-led
+
+#ViewSonicVietnam #DVLED #LEDvsLCD #CommercialDisplay #DigitalSignage`},
+
+// Jul 28 (T3)
+{date:'2026-07-28',s:'AM',type:'PRODUCT',h:'ViewSonic VX2757-2K-Pro-4 – Siêu mỏng, siêu đẹp cho không gian làm việc hiện đại',c:`🏢 Không gian làm việc phản ánh phong cách làm việc của bạn.
+
+ViewSonic VX2757-2K-Pro-4 – lần 2, vì nó xứng đáng:
+✅ Ultra-thin bezel – đẹp cho bàn làm việc gọn gàng
+✅ 2K QHD IPS – text sắc nét, ảnh đẹp
+✅ sRGB 99% – màu chuẩn cho content creator
+✅ Eye Care certified – làm việc cả ngày không lo mắt
+✅ Kết nối đầy đủ: HDMI, DP, Audio out
+
+Nâng cấp workspace của bạn ngay hôm nay.
+
+👉 viewsonic.com/vn
+
+#ViewSonicVietnam #VX2757 #WorkMonitor #2K #HomeOffice`},
+
+{date:'2026-07-28',s:'PM',type:'ENGAGE',h:'Gaming hay Work — Màn hình của bạn thiên về nào hơn?',c:`Câu hỏi kinh điển cho thứ 3!
+
+Màn hình bạn đang dùng thiên về:
+
+🎮 Gaming: Refresh rate cao, response time thấp, màu vivid
+🎨 Work/Design: Màu chuẩn, sRGB, eye care, kết nối tốt
+⚖️ Cả hai (all-rounder)
+📱 Tôi chưa có màn hình riêng
+
+Tag bạn bè và cho biết model bạn đang dùng! 👇
+
+#ViewSonicVietnam #Gaming #Work #Monitor #Poll`},
+
+// Jul 29 (T4)
+{date:'2026-07-29',s:'AM',type:'EDU',h:'DisplayPort vs HDMI – Dùng cái nào cho màn hình gaming?',c:`📚 2026 rồi mà vẫn còn nhầm? Đây là sự khác biệt:
+
+🔵 HDMI 2.1
+→ 4K@120Hz, 8K@60Hz
+→ Phổ biến hơn, có trên TV và console
+→ eARC cho audio cao cấp
+
+🟢 DisplayPort 1.4
+→ 4K@144Hz, 1440p@240Hz
+→ Daisy-chain nhiều màn hình
+→ Tốt hơn cho PC gaming monitor
+
+✅ Kết luận:
+PC gaming: Dùng DisplayPort
+Console/TV: Dùng HDMI
+USB-C: DisplayPort Alternate Mode (hỗ trợ cả hai)
+
+#ViewSonicVietnam #EDU #DisplayPort #HDMI #GamingMonitor`},
+
+{date:'2026-07-29',s:'PM',type:'VIEWBOARD',h:'ViewBoard vs Bảng trắng truyền thống – Đâu là khoản đầu tư đúng?',c:`🔄 Tính toán ROI thực tế:
+
+Bảng trắng: 500K–2 triệu. Mực bút hết. Không lưu được. Không zoom được. Không share được.
+
+ViewBoard: Màn 4K cảm ứng. Ghi lại toàn bộ. Share ngay lên cloud. Tích hợp video call. Dùng được 50,000+ giờ.
+
+ROI thực tế qua 5 năm:
+→ Tiết kiệm chi phí mực, phấn, giấy in
+→ Meeting hiệu quả hơn → quyết định nhanh hơn
+→ Nội dung lưu trữ → không mất thông tin sau họp
+→ Hybrid meeting không cần thiết bị phụ
+
+Đầu tư một lần. Dùng cả thập kỷ.
+
+👉 viewsonic.com/vn/products/viewboard
+
+#ViewSonicVietnam #ViewBoard #ROI #SmartBoard #Digital #Education`},
+
+// Jul 30 (T5)
+{date:'2026-07-30',s:'AM',type:'TIPS',h:'Cách vệ sinh màn hình đúng cách – Đừng làm hỏng màn',c:`🧹 Vệ sinh sai có thể làm xước hoặc hỏng lớp phủ màn hình!
+
+❌ KHÔNG làm:
+→ Dùng giấy tissue / khăn giấy thô
+→ Xịt nước hoặc hóa chất trực tiếp lên màn
+→ Dùng cồn 70%+ (làm hỏng lớp anti-glare)
+→ Chà mạnh khi màn đang nóng
+
+✅ NÊN làm:
+→ Khăn microfiber mềm, sạch
+→ Nước lọc hoặc dung dịch vệ sinh màn chuyên dụng
+→ Lau nhẹ nhàng theo một chiều
+→ Tắt màn trước khi lau
+
+Màn ViewSonic có lớp phủ bền, nhưng vẫn cần chăm sóc đúng cách.
+
+#ViewSonicVietnam #Tips #CleanMonitor #Monitor #Maintenance`},
+
+{date:'2026-07-30',s:'PM',type:'PROJECTOR',h:'Biến phòng khách thành rạp chiếu phim với máy chiếu ViewSonic',c:`🎬 TV lớn nhất chỉ 98 inch. Máy chiếu ViewSonic cho bạn 120"+ với chi phí thấp hơn nhiều.
+
+ViewSonic Home Entertainment Projectors:
+✅ 4K UHD – sắc nét như cinema thật
+✅ HDR support – màu sắc rực rỡ, contrast cao
+✅ Google TV tích hợp – Netflix, YouTube không cần box
+✅ Loa Harman Kardon tích hợp (một số model)
+✅ Laser/LED – tuổi thọ cao, màu ổn định
+
+🎯 Gợi ý: ViewSonic X1-4K Pro, LX700-4K, X2000L-4K
+
+120 inch. Đèn tắt. Chỉ bạn và bộ phim.
+
+👉 viewsonic.com/vn/reimagineyourspace
+
+#ViewSonicVietnam #HomeTheater #Projector #4K #Cinema #HomeEntertainment`},
+
+// Jul 31 (T6)
+{date:'2026-07-31',s:'AM',type:'PRODUCT',h:'ViewSonic VX2766-2K-Pro-9 – Tổng kết: Tại sao đây là màn 27" 2K đáng mua nhất tầm giá?',c:`🏆 Cuối tháng 7 – nhìn lại màn hình của tháng!
+
+VX2766-2K-Pro-9 – 5 lý do khiến nó best value:
+1️⃣ 2K IPS với giá cạnh tranh nhất phân khúc
+2️⃣ USB-C 65W – 1 dây charge + display + data
+3️⃣ sRGB 103% – creator friendly
+4️⃣ Eye Care TÜV certified – dùng cả ngày không lo
+5️⃣ Thiết kế tinh tế, viền mỏng 3 cạnh
+
+Work hard. Game harder. VX2766-2K-Pro-9 theo kịp cả 2.
+
+👉 viewsonic.com/vn/products/lcd/VX2766-2K-Pro-9
+
+#ViewSonicVietnam #VX2766 #BestValue #USBC #2K #MonitorReview`},
+
+{date:'2026-07-31',s:'PM',type:'ENGAGE',h:'Tháng 7 Gaming Season sắp kết thúc – Bạn đã upgrade gì chưa? 🔥',c:`Tháng 7 Gaming Season kết thúc rồi!
+
+ViewSonic muốn nghe từ bạn:
+
+🎮 Bạn có upgrade setup gì trong tháng 7 không?
+📊 Màn hình mới? Peripheral? Hay chỉ cập nhật driver thôi?
+
+Comment thành quả gaming của bạn trong tháng 7 👇
+Ai có upgrade ngầu nhất sẽ được ViewSonic reaction đặc biệt! 🔥
+
+Tháng 8 = Work Smart Month — stay tuned!
+
+#ViewSonicVietnam #GamingSeason #July #MonthlyWrap #ViewSonicCommunity`},
+
+// ===== THÁNG 8 =====
+// Aug 3 (T2)
+{date:'2026-08-03',s:'AM',type:'TIPS',h:'5 cách tối ưu màn hình cho WFH hiệu quả nhất',c:`💻 Work From Home tháng 8 – nâng cấp workspace nhé!
+
+5 tips WFH display optimization:
+1️⃣ Calibrate color profile theo loại công việc (sRGB/DCI-P3)
+2️⃣ Bật Night Mode sau 6PM – giảm blue light cho giấc ngủ tốt hơn
+3️⃣ Dùng PiP/PbP nếu màn hỗ trợ – 2 nguồn input cùng lúc
+4️⃣ Kết nối USB-C để giảm rối dây
+5️⃣ Điều chỉnh brightness theo giờ trong ngày
+
+ViewSonic WorkPro Series – thiết kế riêng cho người làm việc nghiêm túc.
+
+#ViewSonicVietnam #WFH #Tips #WorkFromHome #WorkSmart`},
+
+{date:'2026-08-03',s:'PM',type:'LED',h:'LDP Series – MicroLED in Package, công nghệ LED thế hệ mới nhất',c:`🔬 MIP (MicroLED in Package) – Tiến hóa tiếp theo của dvLED
+
+So với LED truyền thống, MIP cải thiện 3 điểm:
+
+🎯 Độ bền: Pixel được đúc trong lớp bảo vệ → chống va đập, bụi tốt hơn
+⚡ Hiệu suất: Tiêu thụ điện ít hơn, độ sáng đồng đều hơn
+🎨 Chất lượng hình ảnh: Màu sắc nhất quán, black level sâu hơn
+
+ViewSonic LDP Series – MicroLED in Package cho môi trường đòi hỏi độ tin cậy cao:
+✅ Bệnh viện, sân bay, trung tâm chỉ huy
+✅ Vận hành 24/7/365
+
+👉 viewsonic.com/vn/products/direct-view-led
+
+#ViewSonicVietnam #LDPSeries #MicroLED #MIP #CommercialDisplay`},
+
+// Aug 4 (T3)
+{date:'2026-08-04',s:'AM',type:'PRODUCT',h:'ViewSonic XG2431A – Gaming 24" 240Hz IPS cho dân FPS hardcore',c:`🎯 Competitive FPS player cần màn hình không cho phép mình thua vì gear.
+
+ViewSonic XG2431A:
+✅ 24 inch | IPS | Full HD
+✅ 240Hz – tốc độ cao nhất cho competitive gaming
+✅ 1ms MPRT – ghosting = 0
+✅ AMD FreeSync Premium
+✅ HDMI 2.0 x2 + DP 1.2 x1
+✅ Backlight strobing mode – thêm clarity khi chuyển động nhanh
+
+CS2, Valorant, Apex — màn này sinh ra để chơi những game đó.
+
+👉 viewsonic.com/vn/products/lcd/XG2431A
+
+#ViewSonicVietnam #XG2431A #240Hz #FPS #CompetitiveGaming`},
+
+{date:'2026-08-04',s:'PM',type:'ENGAGE',h:'Máy chiếu hay TV lớn – Bạn chọn gì cho home entertainment? 📊',c:`Debate kinh điển cho thứ 3!
+
+Home entertainment setup lý tưởng của bạn là:
+
+📺 Smart TV lớn (65-85"): Dễ dùng, xem ngay, độ sáng tốt
+📽️ Máy chiếu (100"+): Màn siêu lớn, chi phí thấp hơn TV cùng size
+🖥️ Màn hình PC lớn: Đa năng cho cả work lẫn play
+🎬 Projector + màn chiếu chuyên dụng: Rạp phim tại nhà thật sự
+
+Bạn đang dùng gì và có muốn thay đổi không? Comment nhé! 👇
+
+#ViewSonicVietnam #HomeEntertainment #Projector #TV #Poll`},
+
+// Aug 5 (T4)
+{date:'2026-08-05',s:'AM',type:'EDU',h:'1ms vs 4ms Response Time – Sự khác biệt có thực sự quan trọng?',c:`📚 Test thực tế: Mắt người có phân biệt được không?
+
+⏱️ 1ms GtG (Grey to Grey)
+→ Đây là con số marketing
+→ Đo trong điều kiện lý tưởng
+
+⏱️ 4ms GtG  
+→ Thực tế vẫn rất nhanh
+→ Mắt người thường không phân biệt được 1ms vs 4ms
+
+⚠️ Quan trọng hơn: MPRT (Moving Picture Response Time)
+→ Đo ghosting trong chuyển động thực
+→ 1ms MPRT = ít ghosting hơn đáng kể
+
+✅ Kết luận: 4ms GtG + 1ms MPRT > 1ms GtG không có MPRT
+
+ViewSonic công bố cả GtG và MPRT — minh bạch với người dùng.
+
+#ViewSonicVietnam #EDU #ResponseTime #GtG #MPRT`},
+
+{date:'2026-08-05',s:'PM',type:'VIEWBOARD',h:'ViewBoard IFP8651 – 86 inch, Android 14, EDLA-certified',c:`🚀 EDLA (Enterprise Recommended for Android) — chứng nhận Google cho thiết bị doanh nghiệp cao cấp nhất.
+
+ViewBoard IFP8651:
+✅ 86" 4K UHD
+✅ Android 14 EDLA-certified — Google Play đầy đủ, bảo mật enterprise
+✅ NFC sign-in — chạm thẻ, màn hình hiện cài đặt cá nhân
+✅ SSO integration cho môi trường doanh nghiệp
+✅ 8 microphone array — bắt giọng từ mọi góc phòng
+✅ Motion sensor — tự thức dậy khi người vào phòng
+
+Phòng họp enterprise không thỏa hiệp.
+
+👉 viewsonic.com/vn/products/viewboard/IFP8651
+
+#ViewSonicVietnam #ViewBoard #IFP8651 #Android14 #EDLA #Enterprise`},
+
+// Aug 6 (T5)
+{date:'2026-08-06',s:'AM',type:'TIPS',h:'Ergonomic workspace checklist – 5 điều cần kiểm tra ngay',c:`🪑 Work Smart tháng 8 – bắt đầu với workspace đúng chuẩn!
+
+Checklist ergonomics:
+✅ Màn hình: mép trên ngang tầm mắt, cách 50-70cm
+✅ Ghế: chân đặt phẳng, lưng tựa đúng đường cong cột sống
+✅ Bàn phím: khuỷu tay 90°, không gập cổ tay
+✅ Ánh sáng: đèn sau màn, không chiếu thẳng vào mặt
+✅ Break: đứng dậy ít nhất 5 phút mỗi giờ
+
+Màn hình ViewSonic WorkPro: stand điều chỉnh đủ chiều, certified Eye Care.
+
+#ViewSonicVietnam #Ergonomics #WorkSmart #Tips #HealthyWork`},
+
+{date:'2026-08-06',s:'PM',type:'PROJECTOR',h:'Máy chiếu portable ViewSonic – Họp bất cứ đâu, trình bày bất cứ lúc nào',c:`💼 Cà phê, co-working space, văn phòng khách hàng — máy chiếu portable ViewSonic bỏ vừa trong ba lô.
+
+ViewSonic Portable Projectors (M Series):
+✅ Pin built-in – trình bày không cần ổ cắm điện
+✅ Kết nối không dây – share screen từ laptop, tablet, phone
+✅ Nhỏ gọn, nhẹ – không chiếm không gian hành lý
+✅ LED light source – tuổi thọ cao, màu ổn định
+✅ Loa Harman Kardon tích hợp – âm thanh đủ nghe trong phòng họp nhỏ
+
+🎯 M1S, M1X, M2, M10 – từ basic đến premium.
+
+👉 viewsonic.com/vn/products/projectors
+
+#ViewSonicVietnam #PortableProjector #MSeriesProjector #BusinessProjector #Presentation`},
+
+// Aug 7 (T6)
+{date:'2026-08-07',s:'AM',type:'PRODUCT',h:'ViewSonic VP2766-2K(W) – ColorPro 27" 2K cho creative professional',c:`🎨 Màn hình cho người làm thật, không phải màn hình cho người khoe.
+
+ViewSonic VP2766-2K(W) – ColorPro Series:
+✅ 27" | IPS | 2K QHD
+✅ 99% Adobe RGB | 100% sRGB | 95% DCI-P3
+✅ Delta E < 2 – factory calibrated
+✅ USB-C 65W charging
+✅ Hardware calibration support
+✅ Eye Care – TÜV Rheinland Flicker-Free + Low Blue Light
+
+Thiết kế cho: Photographer, Graphic Designer, Video Editor.
+
+👉 viewsonic.com/vn/colorpro
+
+#ViewSonicVietnam #ColorPro #VP2766 #AdobeRGB #CreativeMonitor #Photography`},
+
+{date:'2026-08-07',s:'PM',type:'TIPS',h:'Thiết lập color profile đúng theo từng loại công việc',c:`🎨 Một màn hình có thể có nhiều color profile — và bạn nên dùng đúng cái:
+
+🖥️ sRGB: Web design, social media, email marketing
+🖨️ Adobe RGB: In ấn, print design  
+🎬 DCI-P3: Video production, film editing
+⚪ Native/Custom: Gaming (màu vivid hơn)
+
+Cách switch nhanh trên ViewSonic:
+→ Menu > Picture > Color Mode > Chọn profile
+
+ViewSonic VP Series cho phép hardware calibration để độ chính xác tối đa.
+
+#ViewSonicVietnam #Tips #ColorProfile #Design #Creative #Monitor`},
+
+// Aug 10 (T2)
+{date:'2026-08-10',s:'AM',type:'TIPS',h:'Top 5 màn hình ViewSonic cho freelancer và remote worker',c:`💻 Work Smart tháng 8 – màn hình nào phù hợp với dân freelance?
+
+🥇 VP2766-2K(W) – Cho design/photo/video
+🥈 VX2766-2K-Pro-9 – Cho all-rounder, USB-C
+🥉 VX2537 – Cho budget-conscious remote worker
+4️⃣ VG1457 – Portable, dùng cho dân hay di chuyển
+5️⃣ VX2731A – 27" IPS, giá tốt cho home office
+
+Bạn là freelancer hay remote worker? Comment công việc để ViewSonic recommend cụ thể hơn! 👇
+
+#ViewSonicVietnam #FreelancerMonitor #WorkFromHome #Tips #RemoteWork`},
+
+{date:'2026-08-10',s:'PM',type:'VIEWBOARD',h:'ViewBoard cho hybrid meeting – Khi một nửa team ở văn phòng, nửa ở nhà',c:`🌐 Vấn đề hybrid phổ biến nhất: Người remote không thấy whiteboard. Người trong phòng không tương tác được với remote team.
+
+ViewBoard giải quyết cả hai:
+✅ Camera & mic tích hợp – meeting không cần thiết bị phụ
+✅ AirSync wireless – share màn hình không dây cho remote team
+✅ Mọi người cùng viết, vẽ, comment trên cùng một canvas
+✅ TeamOne collaboration – annotation realtime từ mọi thiết bị
+✅ Microsoft Teams Rooms certified (một số model)
+
+Hybrid work không còn là bài toán khó.
+
+👉 viewsonic.com/vn/work/mtrsolution
+
+#ViewSonicVietnam #ViewBoard #HybridWork #RemoteWork #Collaboration #MicrosoftTeams`},
+
+// Aug 11 (T3)
+{date:'2026-08-11',s:'AM',type:'PRODUCT',h:'ViewSonic VX2731A – 27" IPS 100Hz giá tốt nhất cho dân văn phòng',c:`🏢 Văn phòng cần màn hình đáng tin cậy, không drama.
+
+ViewSonic VX2731A:
+✅ 27 inch | IPS | Full HD
+✅ 100Hz – mượt cho cả work lẫn casual gaming
+✅ Eye Care – flicker-free + low blue light
+✅ Thin bezel – đẹp cho môi trường văn phòng
+✅ HDMI x2 + VGA – kết nối với mọi loại máy tính
+✅ Thiết kế đơn giản, chuyên nghiệp
+
+Tin cậy. Bền. Giá hợp lý. Đó là VX2731A.
+
+👉 viewsonic.com/vn/products/lcd/VX2731A
+
+#ViewSonicVietnam #VX2731A #OfficeMonitor #27inch #IPS #WorkSmart`},
+
+{date:'2026-08-11',s:'PM',type:'ENGAGE',h:'Bạn làm việc với bao nhiêu màn hình cùng lúc? 💻',c:`Thứ 3 Work Smart: Khảo sát setup màn hình!
+
+Bạn đang dùng bao nhiêu màn hình khi làm việc?
+
+1️⃣ 1 màn – đủ rồi
+2️⃣ 2 màn – primary + secondary
+3️⃣ 3+ màn – power user thật sự
+📱 1 màn + tablet/phone phụ trợ
+
+Và công việc của bạn là gì? Comment nhé! Nhiều màn hình thực sự tăng năng suất 30-40% theo nghiên cứu.
+
+#ViewSonicVietnam #DualMonitor #WorkSetup #Poll #Productivity`},
+
+// Aug 12 (T4)
+{date:'2026-08-12',s:'AM',type:'EDU',h:'sRGB vs DCI-P3 – Color gamut nào quan trọng với bạn?',c:`📚 Color gamut 101 – học một lần, hiểu mãi mãi:
+
+🔵 sRGB (Standard RGB)
+→ Standard cho web, digital media
+→ 100% sRGB = đủ cho hầu hết công việc
+→ Compatible với mọi thiết bị
+
+🟣 DCI-P3
+→ Standard cho cinema, HDR content
+→ Rộng hơn sRGB 26%
+→ Cần thiết cho video editing, HDR gaming
+
+📊 Khi nào cần DCI-P3?
+→ Editing video cho YouTube/Netflix
+→ HDR photography
+→ Game với HDR enabled
+
+ViewSonic ColorPro: 99% Adobe RGB + 95% DCI-P3 trên cùng một màn.
+
+#ViewSonicVietnam #EDU #sRGB #DCIP3 #ColorGamut #Design`},
+
+{date:'2026-08-12',s:'PM',type:'LED',h:'LED ViewSonic cho sự kiện và hội nghị – Backdrop thông minh thay thế băng rôn truyền thống',c:`🎪 Backdrop truyền thống: In flex, setup 1 ngày, dùng xong bỏ. Chi phí cao, không tái sử dụng.
+
+ViewSonic LED cho events:
+✅ Setup và tháo dỡ nhanh – modular design
+✅ Nội dung thay đổi realtime trong suốt sự kiện
+✅ Video, live feed, slides – tất cả trên cùng một màn hình
+✅ Tái sử dụng cho mọi sự kiện tiếp theo – tiết kiệm dài hạn
+✅ Hình ảnh chuyên nghiệp, ấn tượng với khách mời
+
+Đầu tư một lần. Dùng cho hàng trăm sự kiện.
+
+👉 viewsonic.com/vn/products/direct-view-led
+
+#ViewSonicVietnam #LEDDisplay #EventDisplay #Conference #DigitalSignage #Events`},
+
+// Aug 13 (T5)
+{date:'2026-08-13',s:'AM',type:'TIPS',h:'Dual monitor cho designer – Workflow tối ưu nhất',c:`🎨 Designer setup 2 màn đúng cách sẽ tăng speed đáng kể!
+
+Workflow dual monitor cho creative:
+✅ Màn chính: Workspace làm việc (Photoshop/Premiere canvas)
+✅ Màn phụ: Tool panels, timeline, reference images, browser
+
+💡 Tips nâng cao:
+→ Màn chính: màu chuẩn cao (Delta E < 2, 99% sRGB/Adobe RGB)
+→ Màn phụ: không nhất thiết cần màu cao, nhưng nên cùng độ phân giải
+→ Calibrate 2 màn match màu với nhau
+
+ViewSonic ColorPro VP Series: được thiết kế chính xác cho workflow này.
+
+#ViewSonicVietnam #DualMonitor #Tips #Designer #Creative #ColorPro`},
+
+{date:'2026-08-13',s:'PM',type:'PROJECTOR',h:'Laser vs Lamp Projector – Tại sao 2026 không nên mua máy chiếu bóng đèn?',c:`⚖️ So sánh thẳng thắn:
+
+                  Lamp Projector    |    Laser Projector
+Tuổi thọ:         3,000–5,000h      |    20,000–60,000h
+Chi phí thay bóng: 2–5 triệu/lần   |    Không có
+Khởi động:        30–60 giây        |    Tức thì
+Độ sáng theo time: Giảm dần         |    Ổn định
+TCO 5 năm:        Cao               |    Thấp hơn nhiều
+
+✅ Kết luận: Lamp rẻ hơn khi mua. Laser rẻ hơn khi dùng.
+
+Với tần suất sử dụng trung bình 4h/ngày → Lamp thay bóng sau 2-3 năm, laser dùng 15-20 năm.
+
+ViewSonic LS/LSD Series – laser cho mọi phân khúc.
+
+#ViewSonicVietnam #LaserProjector #LampProjector #Projector #TCO`},
+
+// Aug 14 (T6)
+{date:'2026-08-14',s:'AM',type:'PRODUCT',h:'ViewSonic TD1617A-2K – Touchscreen 2K cho POS và interactive kiosk',c:`🖐️ Màn hình cảm ứng không chỉ cho bảng tương tác!
+
+ViewSonic TD1617A-2K – giải pháp touch cho doanh nghiệp:
+✅ 15.6 inch | 2K | IPS
+✅ 10-point multi-touch
+✅ Thiết kế mỏng, lắp được nhiều tư thế (stand, mount, flat)
+✅ Phù hợp: POS hệ thống, kiosk tự phục vụ, reception display
+✅ Kết nối USB-C + HDMI
+✅ Bền bỉ cho môi trường commercial
+
+Retail, hospitality, banking, healthcare – TD1617A-2K phục vụ mọi ngành.
+
+👉 viewsonic.com/vn/products/lcd/TD1617A-2K
+
+#ViewSonicVietnam #TD1617A #TouchScreen #POS #CommercialDisplay #Kiosk`},
+
+{date:'2026-08-14',s:'PM',type:'ENGAGE',h:'LED Display hay LCD – Bạn đã biết sự khác biệt thực sự chưa? 🤔',c:`Câu hỏi B2B cho thứ 6!
+
+Bạn có biết Direct View LED khác LCD như thế nào?
+
+A. Có, tôi hiểu rõ dvLED là gì
+B. Nghe qua nhưng chưa rõ lắm
+C. Tôi chưa bao giờ nghe về dvLED
+D. Tôi đang dùng/cân nhắc dvLED cho doanh nghiệp
+
+Comment để ViewSonic giải thích hoặc tư vấn giải pháp LED phù hợp nhu cầu của bạn! 💡
+
+#ViewSonicVietnam #dvLED #LEDDisplay #Poll #B2B #CommercialDisplay`},
+
+// Aug 17 (T2)
+{date:'2026-08-17',s:'AM',type:'TIPS',h:'Morning productivity routine – Thiết lập màn hình đúng ngay từ đầu ngày',c:`☀️ Back to School / Work Smart tháng 8 – bắt đầu ngày đúng cách!
+
+Morning display routine:
+1️⃣ Dùng brightness auto-adjust hoặc chỉnh thủ công theo ánh sáng phòng sáng
+2️⃣ Switch sang sRGB profile cho công việc ban ngày
+3️⃣ Mở ứng dụng quản lý màn hình (ViewSonic vDisplay Manager) để arrange windows
+4️⃣ Kiểm tra color temperature: 6500K ban ngày
+5️⃣ Tắt gaming/vivid mode nếu quên tắt từ tối hôm trước
+
+Năng suất bắt đầu từ môi trường làm việc đúng.
+
+#ViewSonicVietnam #Tips #MorningRoutine #WorkSmart #Productivity`},
+
+{date:'2026-08-17',s:'PM',type:'PROJECTOR',h:'Gaming trên màn 100 inch – Máy chiếu gaming ViewSonic có thực sự mượt không?',c:`🎮 Câu trả lời ngắn: Có — nếu bạn chọn đúng model.
+
+ViewSonic Gaming Projectors:
+✅ Input lag thấp (dưới 16ms) – đủ cho casual và semi-competitive
+✅ 240Hz refresh rate (một số model) – mượt như màn hình gaming
+✅ 4K resolution – detail sắc nét trên màn 100"
+✅ HDR – màu sắc như thiết kế game muốn bạn thấy
+✅ "Designed for Xbox" certification
+
+🎯 Recommended: ViewSonic X2-4K, X2000L-4K (ultra-short throw)
+
+Khi bạn muốn trải nghiệm gaming thực sự cinematic.
+
+👉 viewsonic.com/vn/products/projectors
+
+#ViewSonicVietnam #GamingProjector #4KGaming #Projector #HomeGaming`},
+
+// Aug 18 (T3)
+{date:'2026-08-18',s:'AM',type:'PRODUCT',h:'ViewSonic VP2766-2K(W) – ColorPro cho Back to School mùa sáng tạo',c:`📚 Tháng 8 – mùa sinh viên design, làm đồ án, chuẩn bị portfolio.
+
+VP2766-2K(W) – người bạn đồng hành cho mùa học:
+✅ 99% Adobe RGB – màu chuẩn cho mọi bài tập thiết kế
+✅ Delta E < 2 – giảng viên duyệt đồ án không chê màu sai
+✅ USB-C 65W – sạc MacBook Pro trong lúc làm việc
+✅ Eye Care – thức khuya làm đồ án không lo mắt
+✅ Đủ rộng 27" cho Illustrator, InDesign, Premiere timeline
+
+Đầu tư vào công cụ tốt = portfolio tốt = cơ hội tốt hơn.
+
+👉 viewsonic.com/vn/colorpro
+
+#ViewSonicVietnam #ColorPro #VP2766 #Design #Student #Portfolio`},
+
+{date:'2026-08-18',s:'PM',type:'ENGAGE',h:'Tính năng nào quan trọng nhất khi chọn màn hình làm việc?',c:`Work Smart poll!
+
+Khi mua màn hình để làm việc, yếu tố nào quan trọng nhất với bạn?
+
+🎨 Màu sắc chính xác (sRGB/Adobe RGB)
+🔌 Kết nối USB-C (charge + display)
+👁️ Eye Care (flicker-free, low blue light)
+📐 Kích thước và thiết kế
+⚡ Refresh rate / Response time
+
+Comment combo của bạn nhé! (ví dụ: màu + eye care)
+
+#ViewSonicVietnam #WorkMonitor #Poll #Engage #WorkSmart`},
+
+// Aug 19 (T4)
+{date:'2026-08-19',s:'AM',type:'EDU',h:'Factory Calibrated là gì và tại sao nó quan trọng?',c:`📚 "Factory Calibrated" – thực sự có nghĩa gì?
+
+Màn hình bình thường:
+→ Sản xuất xong, không kiểm tra màu riêng từng chiếc
+→ Delta E (độ lệch màu) có thể từ 3-8
+→ Màu sắc không khớp giữa các màn hình
+
+Màn hình Factory Calibrated:
+→ Mỗi chiếc được đo và điều chỉnh màu riêng
+→ Delta E < 2 (mắt người khó phân biệt được)
+→ Đi kèm certificate hiệu chuẩn
+
+✅ Cần thiết cho: nhiếp ảnh, video, print design, y tế
+✅ Không quá cần: gaming, office work thông thường
+
+ViewSonic ColorPro: Factory calibrated + kèm certificate.
+
+#ViewSonicVietnam #EDU #FactoryCalibrated #DeltaE #ColorPro #Design`},
+
+{date:'2026-08-19',s:'PM',type:'LED',h:'Sảnh văn phòng + LED ViewSonic = Ấn tượng từ giây đầu tiên',c:`🏢 Ấn tượng đầu tiên xảy ra trong 7 giây. Sảnh văn phòng đang nói gì về doanh nghiệp của bạn?
+
+ViewSonic LED trong corporate lobby:
+✅ Màn hình LED seamless – không viền, không khe hở
+✅ Hiển thị brand identity, giá trị công ty, thành tựu
+✅ Real-time content: tin tức ngành, thông báo nội bộ, sự kiện
+✅ Vận hành 24/7, bảo trì tối thiểu
+✅ Kích thước tùy chỉnh theo không gian
+
+Từ sảnh lobby của startup đến tập đoàn lớn.
+
+👉 viewsonic.com/vn/products/direct-view-led
+
+#ViewSonicVietnam #LEDDisplay #CorporateLobby #DigitalSignage #BrandIdentity`},
+
+// Aug 20 (T5)
+{date:'2026-08-20',s:'AM',type:'TIPS',h:'Top 5 màn hình ViewSonic tốt nhất cho sinh viên Back to School 2026',c:`📚 Back to School 2026 – đầu tư đúng một lần!
+
+🥇 VX2537 – Entry level gaming + study, giá tốt nhất
+🥈 VX2766-2K-Pro-9 – All-rounder, USB-C, 2K
+🥉 VX2731A – 27" IPS ổn định cho study marathon
+4️⃣ VG1457 – Portable, mang theo khi ra ngoài học
+5️⃣ VP2766-2K(W) – Cho sinh viên Design/Art/Architecture
+
+Budget từ thấp → cao. Comment ngành học của bạn để ViewSonic tư vấn phù hợp hơn! 🎓
+
+#ViewSonicVietnam #BackToSchool #StudentMonitor #Tips #2026`},
+
+{date:'2026-08-20',s:'PM',type:'VIEWBOARD',h:'ViewBoard cho trung tâm đào tạo – Interactive learning đúng nghĩa',c:`📋 Training truyền thống: Trainer đọc slide. Học viên ghi chép thụ động. Tỷ lệ ghi nhớ: 10-20%.
+
+Training với ViewBoard:
+✅ Học viên tương tác trực tiếp lên màn hình
+✅ Bài tập nhóm realtime trên cùng canvas
+✅ Quiz và feedback tức thì
+✅ Toàn bộ session được lưu lại – học viên review bất cứ lúc nào
+✅ Tích hợp video + whiteboard + app trong một thiết bị
+
+Tỷ lệ ghi nhớ tăng lên 60-70% khi học viên được tham gia thay vì chỉ nghe.
+
+👉 viewsonic.com/vn/products/viewboard
+
+#ViewSonicVietnam #ViewBoard #TrainingCenter #InteractiveLearning #Corporate #EdTech`},
+
+// Aug 21 (T6)
+{date:'2026-08-21',s:'AM',type:'PRODUCT',h:'ViewSonic VG1457 – Portable monitor 14" mỏng nhẹ cho dân di chuyển',c:`✈️ Công tác, học ở thư viện, làm việc tại quán cà phê — màn hình portable ViewSonic đi cùng bạn.
+
+ViewSonic VG1457:
+✅ 14 inch | IPS | Full HD
+✅ USB-C + Mini HDMI – kết nối với laptop, tablet, phone
+✅ Mỏng, nhẹ – không chiếm nhiều không gian trong túi
+✅ Smart Cover kiêm giá đỡ tích hợp
+✅ Eye Care – dùng mọi nơi mọi lúc không lo mắt
+
+Productivity không bị giới hạn bởi địa điểm.
+
+👉 viewsonic.com/vn/products/lcd/VG1457
+
+#ViewSonicVietnam #VG1457 #PortableMonitor #WorkAnywhere #RemoteWork`},
+
+{date:'2026-08-21',s:'PM',type:'ENGAGE',h:'Entry-level hay mid-range – Đâu là điểm "sweet spot" tốt nhất?',c:`Debate kinh điển cho cuối tuần!
+
+Khi mua màn hình, bạn thường chọn phân khúc nào?
+
+💚 Entry-level (dưới 4 triệu): Đủ dùng, không lãng phí
+💛 Mid-range (4-10 triệu): Sweet spot giá/performance
+🔴 High-end (10-20 triệu): Đầu tư dài hạn
+💎 Premium (20 triệu+): Chỉ mua khi thực sự cần
+
+Và bạn có hối hận về lựa chọn đó không? Comment nhé! 👇
+
+#ViewSonicVietnam #MonitorBudget #Poll #ValueForMoney`},
+
+// Aug 24 (T2)
+{date:'2026-08-24',s:'AM',type:'TIPS',h:'Tăng năng suất với dual monitor – Workflow nào phù hợp với bạn?',c:`🖥️🖥️ Dual monitor không phải cứ cắm 2 màn là xong!
+
+Workflow dual monitor theo nghề:
+📊 Marketing/Business: CRM + Email | Analytics dashboard + Slack
+🎨 Design: Canvas + References | Palette + Client feedback
+💻 Developer: Code editor + Documentation | Terminal + Browser
+📹 Video Editor: Timeline + Preview | Assets + Script
+
+💡 Mẹo: Dùng ViewSonic vDisplay Manager để organize windows tự động theo profile.
+
+Bạn làm nghề gì và split screen như thế nào? 👇
+
+#ViewSonicVietnam #DualMonitor #Tips #Productivity #WorkSmart`},
+
+{date:'2026-08-24',s:'PM',type:'VIEWBOARD',h:'ViewBoard IFP92UW – Màn hình 5K tương tác lớn nhất của ViewSonic',c:`🌟 5K resolution trên màn 92 inch widescreen — chi tiết sắc nét đến từng góc.
+
+ViewBoard IFP92UW:
+✅ 92" Widescreen | 5K (5120x2160) Resolution
+✅ Định dạng 21:9 – phù hợp hội trường lớn, auditorium
+✅ Multi-touch 40 điểm đồng thời
+✅ Android EDLA-certified
+✅ Tích hợp đầy đủ ecosystem myViewBoard
+✅ Camera AI và 8-mic array tích hợp
+
+Khi kích thước và chất lượng đều phải tốt nhất — IFP92UW.
+
+👉 viewsonic.com/vn/products/viewboard/ViewBoard IFP92UW
+
+#ViewSonicVietnam #ViewBoard #IFP92UW #5K #Widescreen #Enterprise #Auditorium`},
+
+// Aug 25 (T3)
+{date:'2026-08-25',s:'AM',type:'PRODUCT',h:'ViewSonic VA24G1-H – 24" IPS mỏng gọn cho home office nhỏ gọn',c:`🏠 Góc làm việc tại nhà không cần rộng mới hiệu quả.
+
+ViewSonic VA24G1-H:
+✅ 24 inch | IPS | Full HD (1920x1080)
+✅ Viền cực mỏng 3 cạnh – đẹp cho setup nhỏ gọn
+✅ 75Hz – mượt cho work và entertainment
+✅ AMD FreeSync
+✅ Eye Care – TÜV certified
+✅ HDMI + VGA – kết nối linh hoạt
+
+Giá tốt nhất cho màn 24" IPS từ ViewSonic.
+
+👉 viewsonic.com/vn/products/lcd/VA24G1-H
+
+#ViewSonicVietnam #VA24G1H #HomeOffice #24inch #IPS #AffordableMonitor`},
+
+{date:'2026-08-25',s:'PM',type:'ENGAGE',h:'WFH hay văn phòng – Bạn productive hơn ở đâu?',c:`Debate lớn của năm 2026!
+
+Bạn làm việc hiệu quả hơn ở đâu?
+
+🏠 WFH hoàn toàn – tôi làm việc tốt nhất tại nhà
+🏢 Văn phòng – cần environment công việc, tập trung hơn
+🔀 Hybrid – tùy ngày tùy loại công việc
+☕ Mọi nơi – tôi là nomad thật sự
+
+Và màn hình bạn dùng ở nhà là gì? ViewSonic đang tổng hợp insights! 📊
+
+#ViewSonicVietnam #WFH #HybridWork #WorkStyle #Poll`},
+
+// Aug 26 (T4)
+{date:'2026-08-26',s:'AM',type:'EDU',h:'VA Panel là gì và khi nào nên chọn?',c:`📚 IPS vs TN bạn đã biết – nhưng VA panel thì sao?
+
+🔷 VA (Vertical Alignment) – kẻ thứ 3 thường bị bỏ qua:
+
+Ưu điểm:
+✅ Contrast ratio cao nhất: 2,000:1 – 5,000:1 (vs IPS 1,000:1)
+✅ Black level xuất sắc – đen thực sự đen
+✅ Màu sắc tốt hơn TN
+
+Nhược điểm:
+⚠️ Góc nhìn kém hơn IPS
+⚠️ Response time chậm hơn TN/IPS hiện đại
+⚠️ "Motion blur" nhiều hơn khi gaming nhanh
+
+✅ Chọn VA khi: Xem phim nhiều, multimedia, màn hình cho phòng tối.
+
+ViewSonic VA Series – affordable IPS và VA cho mọi nhu cầu.
+
+#ViewSonicVietnam #EDU #VAPanel #IPS #TN #DisplayTech`},
+
+{date:'2026-08-26',s:'PM',type:'LED',h:'LDE Series – All-in-One LED Display, setup đơn giản cho mọi môi trường',c:`📦 Triển khai LED thường đòi hỏi: màn hình + media player + phần mềm + cabling = phức tạp.
+
+LDE Series gộp tất cả vào một:
+✅ Built-in OS – không cần media player ngoài
+✅ CMS tích hợp – quản lý nội dung từ xa qua cloud
+✅ Plug and display – setup trong vài giờ, không cần kỹ thuật chuyên sâu
+✅ Remote management – cập nhật nội dung từ bất cứ đâu
+✅ Phù hợp: Retail, nhà hàng, trường học, văn phòng vừa và nhỏ
+
+Hiển thị chuyên nghiệp. Triển khai đơn giản.
+
+👉 viewsonic.com/vn/products/direct-view-led
+
+#ViewSonicVietnam #LDESeries #LEDDisplay #AllInOne #DigitalSignage #EasyDeploy`},
+
+// Aug 27 (T5)
+{date:'2026-08-27',s:'AM',type:'TIPS',h:'Budget gaming setup tốt nhất dưới 15 triệu – Hướng dẫn chọn màn hình',c:`💰 Gaming không cần phải tốn nhiều tiền để vui!
+
+Budget breakdown 15 triệu cho gaming setup:
+🖥️ Màn hình: ViewSonic VX2537 hoặc VX2766-2K-Pro-9
+💻 PC: Tùy budget còn lại
+🎧 Headset: Dưới 1 triệu vẫn có cái tốt
+
+Tại sao đầu tư vào màn hình trước?
+→ Màn hình ngon + PC trung bình > PC ngon + màn hình kém
+→ Refresh rate và panel type ảnh hưởng ngay đến trải nghiệm
+
+Comment setup hiện tại của bạn để ViewSonic tư vấn nâng cấp theo thứ tự! 👇
+
+#ViewSonicVietnam #BudgetGaming #Tips #GamingSetup #MonitorFirst`},
+
+{date:'2026-08-27',s:'PM',type:'PROJECTOR',h:'Máy chiếu ViewSonic cho phòng họp doanh nghiệp – Brightness, contrast, chuyên nghiệp',c:`📊 Phòng họp doanh nghiệp cần máy chiếu khác phòng học:
+→ Họp với đèn bật → cần 3,000+ ANSI Lumens
+→ Kết nối wireless → tiết kiệm thời gian setup
+→ Input từ nhiều nguồn → laptop, phone, wireless dongle
+
+ViewSonic Business Projectors:
+✅ 3,000–6,000 ANSI Lumens – rõ khi đèn bật hoàn toàn
+✅ Wireless presentation built-in (một số model)
+✅ HDMI, USB-C, LAN control
+✅ Laser – không cần bảo trì thường xuyên
+
+🎯 Recommended: LSD400W, LS630W, LS740HD
+
+👉 viewsonic.com/vn/products/projectors/business
+
+#ViewSonicVietnam #BusinessProjector #MeetingRoom #Presentation #Corporate`},
+
+// Aug 28 (T6)
+{date:'2026-08-28',s:'AM',type:'PRODUCT',h:'ViewSonic TD1617A-2K – Touchscreen cho doanh nghiệp hiện đại',c:`🖐️ Touch không chỉ dành cho smartphone – màn hình cảm ứng đang vào văn phòng, cửa hàng, bệnh viện.
+
+ViewSonic TD1617A-2K Round 2:
+✅ Multi-touch 10 điểm – tự nhiên như dùng tablet
+✅ 2K resolution – sắc nét cho text và ảnh chi tiết
+✅ USB-C – cắm 1 dây, charge + display + touch data
+✅ Góc xem rộng IPS – đọc được từ nhiều phía
+✅ Thiết kế slim – lắp counter, wall, hay dùng như tablet lớn
+
+Use cases: Check-in kiosk, POS, reception desk, hospital triage display.
+
+👉 viewsonic.com/vn/products/lcd/TD1617A-2K
+
+#ViewSonicVietnam #TD1617A #TouchMonitor #Kiosk #CommercialDisplay #POS`},
+
+{date:'2026-08-28',s:'PM',type:'ENGAGE',h:'Back to School 2026 – Bạn chuẩn bị gì cho năm học mới?',c:`📚 Back to School tháng 8 – ViewSonic muốn nghe từ bạn!
+
+Bạn đã hoặc đang chuẩn bị gì cho năm học / năm làm việc mới?
+
+🖥️ Nâng cấp màn hình / setup học tập
+💻 Laptop mới
+📱 Thiết bị phụ trợ (tablet, keyboard...)
+🏠 Cải thiện không gian học/làm tại nhà
+
+Share setup học tập của bạn! Ai có setup ngầu nhất sẽ được ViewSonic tặng quà 🎁
+
+#ViewSonicVietnam #BackToSchool #Setup #Student #WorkSmart2026`},
+
+// Aug 31 (T2)
+{date:'2026-08-31',s:'AM',type:'TIPS',h:'Checklist màn hình cho năm học mới – Sinh viên cần biết',c:`📚 Năm học mới, không muốn mua màn hình sai!
+
+Checklist mua màn cho sinh viên 2026:
+
+✅ NGÀNH DESIGN/ART: IPS + 99% sRGB minimum + eye care
+✅ NGÀNH KỸ THUẬT/CODING: 27" IPS, góc nhìn rộng, text rõ
+✅ NGÀNH KINH TẾ/MARKETING: 24-27" IPS basic, USB-C tiện
+✅ GAMING + STUDY: 144Hz IPS, đủ dùng cả hai
+✅ PORTABLE: ViewSonic VG1457 nếu hay di chuyển
+
+Budget hợp lý: 3-7 triệu là đủ cho đại đa số sinh viên.
+
+Comment ngành của bạn để ViewSonic recommend cụ thể! 🎓
+
+#ViewSonicVietnam #BackToSchool #StudentMonitor #Tips #2026`},
+
+{date:'2026-08-31',s:'PM',type:'VIEWBOARD',h:'Năm học mới cùng ViewBoard – Tại sao trường học đang chuyển sang bảng thông minh?',c:`📚 Xu hướng giáo dục 2026: Interactive display đang thay thế bảng truyền thống tại nhiều trường học Đông Nam Á.
+
+Lý do trường học chọn ViewBoard:
+✅ Học sinh tương tác nhiều hơn → ghi nhớ bài tốt hơn
+✅ Giáo viên chuẩn bị bài nhanh hơn với digital resources
+✅ Lưu trữ bài giảng → học sinh review sau giờ học
+✅ Tiết kiệm chi phí phấn, mực, giấy in dài hạn
+✅ Kết nối với Google Classroom, Microsoft Teams for Education
+
+ViewBoard IFP Series: 65" / 75" / 86" cho mọi kích thước phòng học.
+
+👉 viewsonic.com/vn/education
+
+#ViewSonicVietnam #ViewBoard #BackToSchool #Education #SmartClassroom #2026`},
+
+// ===== THÁNG 9 =====
+// Sep 1 (T3)
+{date:'2026-09-01',s:'AM',type:'PRODUCT',h:'ViewSonic VG1457 – Portable monitor cho dân hay di chuyển',c:`✈️ Bạn làm việc ở nhiều nơi khác nhau mỗi ngày?
+
+ViewSonic VG1457 – màn hình portable thực sự dùng được:
+✅ 14" IPS Full HD – sắc nét, màu đúng
+✅ USB-C + Mini HDMI – tương thích mọi laptop, tablet
+✅ Smart Cover tích hợp giá đỡ – không cần mua thêm phụ kiện
+✅ Mỏng 8mm, nhẹ 790g – bỏ vào túi laptop 15"
+✅ Eye Care – làm việc mọi nơi không lo mắt
+
+Từ cà phê đến phòng khách sạn đến văn phòng khách hàng.
+
+👉 viewsonic.com/vn/products/lcd/VG1457
+
+#ViewSonicVietnam #VG1457 #PortableMonitor #SecondScreen #WorkAnywhere`},
+
+{date:'2026-09-01',s:'PM',type:'LED',h:'Màn hình LED trong giảng đường – Hiển thị không giới hạn cho lớp học hiện đại',c:`🎓 Giảng đường 200-500 người: màn chiếu truyền thống tối, mờ khi đèn bật. LED ViewSonic giải quyết hoàn toàn.
+
+ViewSonic LED cho giảng đường và campus:
+✅ Độ sáng cao – rõ ràng kể cả khi đèn phòng bật hoàn toàn
+✅ Kích thước tùy chỉnh – phù hợp mọi không gian giảng đường
+✅ Không flicker – bảo vệ mắt sinh viên trong thời gian dài
+✅ Kết hợp với ViewBoard – interactive lecture cho lớp lớn
+✅ Durability cao – phù hợp môi trường sử dụng nhiều
+
+Giảng đường hiện đại cần màn hình hiện đại.
+
+👉 viewsonic.com/vn/products/direct-view-led
+
+#ViewSonicVietnam #LEDDisplay #Education #SmartCampus #University`},
+
+// Sep 2 (T4)
+{date:'2026-09-02',s:'AM',type:'ENGAGE',h:'Q3 sắp kết thúc – Bạn đã upgrade gì trong năm nay? 📊',c:`Tháng 9 rồi — Q3 sắp kết thúc!
+
+ViewSonic muốn biết: Bạn đã upgrade thiết bị gì trong 2026?
+
+🖥️ Màn hình mới
+💻 Laptop/PC mới  
+📽️ Máy chiếu
+🖥️ Bảng tương tác / LED Display
+📱 Chưa upgrade gì cả — đang chờ Q4 sale!
+
+Comment để ViewSonic biết community mình đang dùng gì nhé 👇
+
+#ViewSonicVietnam #Poll #Upgrade #2026 #Q3Review`},
+
+{date:'2026-09-02',s:'PM',type:'EDU',h:'USB-C Connectivity – Một dây kết nối tất cả cho màn hình hiện đại',c:`📚 USB-C trên màn hình – không chỉ là cổng kết nối thông thường!
+
+🔌 USB-C trên màn hình ViewSonic làm được:
+✅ Display: Xuất hình từ laptop/tablet lên màn
+✅ Power Delivery: Sạc laptop 65W-90W qua cùng 1 dây
+✅ Data: USB hub, kết nối thiết bị ngoại vi qua màn hình
+✅ Alt Mode: DisplayPort over USB-C cho chất lượng hình cao nhất
+
+💡 Kết quả: 1 dây USB-C thay thế HDMI + charger + USB hub
+
+Đặc biệt hữu ích cho dân dùng MacBook, iPad Pro, Surface.
+
+ViewSonic VX2766-2K-Pro-9, VP2766-2K(W) – USB-C 65W.
+
+#ViewSonicVietnam #EDU #USBC #PowerDelivery #Monitor #Connectivity`},
+
+// Sep 3 (T5)
+{date:'2026-09-03',s:'AM',type:'PROJECTOR',h:'ViewSonic Projectors tổng kết – Loại nào phù hợp với bạn?',c:`🔦 ViewSonic – thương hiệu máy chiếu DLP số 1 thế giới. Tổng kết Q3 để bạn chọn đúng:
+
+🏫 GIÁO DỤC: LS Series / LSD Series
+→ Laser, sáng, bền, ít bảo trì, LAN control
+
+🏢 DOANH NGHIỆP: LS/LSD Business line
+→ Wireless, 3000-6000 lumens, professional
+
+🏠 GIA ĐÌNH / HOME THEATER: X Series / LX Series
+→ 4K, HDR, Google TV, Harman Kardon
+
+✈️ DI ĐỘNG: M Series
+→ Pin tích hợp, nhỏ gọn, Harman Kardon
+
+🎮 GAMING: X2 Series / X2000L-4K
+→ Input lag thấp, 4K, ultra-short throw
+
+Bạn cần máy chiếu cho không gian nào? Comment để ViewSonic tư vấn! 👇
+
+#ViewSonicVietnam #Projector #LaserProjector #HomeTheater #PortableProjector`},
+
+{date:'2026-09-03',s:'PM',type:'TIPS',h:'Portable monitor – Khi nào thực sự cần và khi nào không?',c:`💻 Tất cả mọi người có cần portable monitor không? Thẳng thắn nhé:
+
+✅ BẠN CẦN portable monitor khi:
+→ Làm việc ở nhiều nơi mỗi tuần (coffee shop, co-working, văn phòng khách hàng)
+→ Hay đi công tác, cần 2 màn hình mà không mang màn to
+→ Làm presentation thường xuyên tại địa điểm khách hàng
+→ Muốn dual screen khi ra ngoài
+
+❌ BẠN KHÔNG CẦN khi:
+→ 95% làm việc tại bàn cố định 1 nơi
+→ Chỉ xem film/gaming
+
+ViewSonic VG1457 – portable monitor được tin dùng nhất phân khúc.
+
+#ViewSonicVietnam #PortableMonitor #Tips #WorkAnywhere #VG1457`},
+
+// Sep 4 (T6)
+{date:'2026-09-04',s:'AM',type:'PRODUCT',h:'ViewSonic VA24G2-H – 24" IPS 100Hz entry level tốt nhất tầm giá',c:`💚 Không phải lúc nào cũng cần chi nhiều mới có màn hình tốt.
+
+ViewSonic VA24G2-H:
+✅ 24 inch | IPS | Full HD (1920x1080)
+✅ 100Hz – mượt hơn 60Hz mà giá không chênh nhiều
+✅ 1ms MPRT
+✅ AMD FreeSync
+✅ Eye Care – TÜV certified Flicker-Free + Low Blue Light
+✅ Thin bezel 3 cạnh – đẹp cho mọi setup
+
+Entry level không có nghĩa là compromise. VA24G2-H chứng minh điều đó.
+
+👉 viewsonic.com/vn/products/lcd/VA24G2-H
+
+#ViewSonicVietnam #VA24G2H #EntryMonitor #100Hz #AffordableMonitor #IPS`},
+
+{date:'2026-09-04',s:'PM',type:'ENGAGE',h:'Sản phẩm ViewSonic nào bạn muốn tìm hiểu thêm trong Q4? 🔮',c:`Q3 sắp kết thúc — Q4 đang đến!
+
+ViewSonic Vietnam muốn nghe từ bạn: Dòng sản phẩm nào bạn muốn ViewSonic chia sẻ nhiều hơn trong Q4?
+
+🖥️ Màn hình gaming (XG, VX Series)
+🎨 Màn hình sáng tạo (ColorPro, VP Series)
+🖥️ ViewBoard – bảng tương tác
+💡 LED Display – màn hình thương mại
+📽️ Máy chiếu – laser, portable, home theater
+
+Comment và tag bạn bè cùng vote nhé! Kết quả sẽ định hướng nội dung Q4 của ViewSonic! 🎯
+
+#ViewSonicVietnam #Q4Preview #Poll #Community #Engage`},
+
+// Sep 7 (T2)
+{date:'2026-09-07',s:'AM',type:'TIPS',h:'Tổng kết Q3 – 5 bài học về display setup từ cộng đồng ViewSonic',c:`🏆 Q3 2026 kết thúc – cùng nhìn lại những gì cộng đồng ViewSonic học được!
+
+5 insights từ Q3:
+1️⃣ Refresh rate quan trọng hơn resolution với gaming entry
+2️⃣ USB-C là must-have cho workflow hiện đại
+3️⃣ Eye Care thực sự hiệu quả khi làm việc 8h+/ngày
+4️⃣ Portable monitor thay đổi hoàn toàn cách làm việc ngoài văn phòng
+5️⃣ Laser projector > lamp projector về TCO dài hạn
+
+Bạn học được gì về display trong Q3? Comment nhé! 👇
+
+#ViewSonicVietnam #Q3Review #Tips #Community #DisplaySmart`},
+
+{date:'2026-09-07',s:'PM',type:'LED',h:'LED ViewSonic – Giải pháp hiển thị quy mô lớn cho mọi ngành',c:`🌟 Q3 2026 recap — ViewSonic LED phục vụ:
+
+🏪 Retail: Digital signage tăng engagement và doanh số
+🏢 Corporate: Lobby và meeting room đẳng cấp, ấn tượng khách
+🎪 Events: Backdrop LED linh hoạt, tái sử dụng tiết kiệm
+🎓 Education: Giảng đường rõ nét, hiện đại, không tắt đèn
+📡 Broadcast & Media: Background video wall chuyên nghiệp
+
+ViewSonic LED Series: LDE (All-in-One), LDP (MicroLED), LDS136 (Mobile)
+
+Dù không gian nào, ViewSonic LED có giải pháp phù hợp.
+Liên hệ để được tư vấn và demo thực tế! 👇
+
+👉 viewsonic.com/vn/products/direct-view-led
+
+#ViewSonicVietnam #LEDDisplay #DVLED #CommercialDisplay #Q3Summary`},
+
+// Sep 8 (T3)
+{date:'2026-09-08',s:'AM',type:'PRODUCT',h:'ViewSonic VG1457 – Portable monitor kết thúc Q3 Gaming & Work Season',c:`🎯 Kết thúc Q3 với sản phẩm được yêu thích nhất phân khúc portable!
+
+ViewSonic VG1457 – recap lý do nó best-seller:
+✅ 14" IPS – màu đẹp, góc nhìn rộng
+✅ USB-C – 1 dây cho tất cả
+✅ Smart Cover + giá đỡ tích hợp – tiết kiệm phụ kiện
+✅ Mỏng nhẹ – bỏ túi laptop không chiếm chỗ
+✅ Eye Care certified – làm việc dài không mỏi mắt
+
+Q3 kết thúc, Q4 chuẩn bị bắt đầu với nhiều sản phẩm mới hơn!
+
+👉 viewsonic.com/vn/products/lcd/VG1457
+
+#ViewSonicVietnam #VG1457 #PortableMonitor #Q3Final #StayTuned`},
+
+{date:'2026-09-08',s:'PM',type:'VIEWBOARD',h:'ViewBoard Q3 2026 tổng kết – 3 use case được chọn nhiều nhất',c:`🏆 ViewBoard Q3 2026 — 3 use case dẫn đầu:
+
+🥇 Hybrid Meeting Room
+ViewBoard + camera tích hợp thay thế cả hệ thống AV cũ. Họp hybrid mượt mà, không cần setup phức tạp.
+
+🥈 Smart Classroom K-12 & Đại học
+Tương tác thực, quiz realtime, lưu bài giảng cloud. Học sinh tập trung hơn rõ rệt.
+
+🥉 Corporate Training Center
+Session được ghi lại, học viên review bất cứ lúc nào. ROI training tăng lên đáng kể.
+
+ViewBoard không chỉ là màn hình lớn — đó là nền tảng cộng tác.
+
+Q4 sắp tới với nhiều model ViewBoard mới — stay tuned!
+
+👉 viewsonic.com/vn/products/viewboard
+
+#ViewSonicVietnam #ViewBoard #Q3Summary #SmartBoard #Education #Corporate`},
+
+]; // end SCHEDULE
+
+
+// ===== STATE & RENDERING =====
+let doneSet = new Set(JSON.parse(localStorage.getItem('vs_done')||'[]'));
+let currentFilter = 'ALL';
+
+function saveState(){localStorage.setItem('vs_done',JSON.stringify([...doneSet]));}
+
+function formatDate(d){
+  const dt=new Date(d+'T00:00:00');
+  const days=['CN','T2','T3','T4','T5','T6','T7'];
+  return `${days[dt.getDay()]} ${dt.getDate()}/${dt.getMonth()+1}`;
+}
+
+function getMonth(d){return parseInt(d.split('-')[1]);}
+
+function buildFilterBar(){
+  const bar=document.getElementById('filterBar');
+  const filters=[{k:'ALL',label:'Tất cả'},...Object.entries(TYPES).map(([k,v])=>({k,label:v.label})),{k:'DONE',label:'Đã đăng'}];
+  bar.innerHTML=filters.map(f=>`<button class="filter-btn${currentFilter===f.k?' active':''}" onclick="setFilter('${f.k}')">${f.label}</button>`).join('');
+}
+
+function setFilter(k){currentFilter=k;buildFilterBar();renderContent();}
+
+function updateStats(){
+  const total=S.length, done=doneSet.size;
+  document.getElementById('progressFill').style.width=(done/total*100)+'%';
+  const counts={};
+  S.forEach(p=>counts[p.type]=(counts[p.type]||0)+1);
+  const today=new Date().toISOString().split('T')[0];
+  const todayPosts=S.filter(p=>p.date===today).length;
+  document.getElementById('statsRow').innerHTML=
+    `<div class="stat">✅ ${done}/${total} bài</div>`+
+    `<div class="stat">📅 Hôm nay: ${todayPosts} bài</div>`+
+    Object.entries(counts).map(([k,v])=>`<div class="stat" style="background:${TYPES[k].color}33">${TYPES[k].label}: ${v}</div>`).join('');
+}
+
+function renderContent(){
+  const today=new Date().toISOString().split('T')[0];
+  let filtered=S;
+  if(currentFilter==='DONE') filtered=S.filter(p=>doneSet.has(p.date+p.s));
+  else if(currentFilter!=='ALL') filtered=S.filter(p=>p.type===currentFilter);
+
+  if(filtered.length===0){
+    document.getElementById('content').innerHTML='<div class="no-results">Không có bài nào phù hợp.</div>';
+    return;
+  }
+
+  // Group by month then week
+  const months={7:{name:'Tháng 7 – Gaming Season 🎮',weeks:{}},8:{name:'Tháng 8 – Work Smart 💼',weeks:{}},9:{name:'Tháng 9 – Back to School 📚',weeks:{}}};
+  
+  filtered.forEach(p=>{
+    const m=getMonth(p.date);
+    const dt=new Date(p.date+'T00:00:00');
+    const weekStart=new Date(dt);
+    weekStart.setDate(dt.getDate()-dt.getDay()+1);
+    const wk=weekStart.toISOString().split('T')[0];
+    if(!months[m]) return;
+    if(!months[m].weeks[wk]) months[m].weeks[wk]=[];
+    months[m].weeks[wk].push(p);
+  });
+
+  let html='';
+  [7,8,9].forEach(m=>{
+    const mo=months[m];
+    const weekKeys=Object.keys(mo.weeks).sort();
+    if(weekKeys.length===0) return;
+    html+=`<div class="month-section"><div class="month-title">${mo.name}</div>`;
+    weekKeys.forEach(wk=>{
+      const posts=mo.weeks[wk].sort((a,b)=>a.date.localeCompare(b.date)||(a.s==='AM'?-1:1));
+      const wdt=new Date(wk+'T00:00:00');
+      html+=`<div class="week-group"><div class="week-label">Tuần ${wdt.getDate()}/${wdt.getMonth()+1}</div><div class="posts-grid">`;
+      posts.forEach(p=>{
+        const id=p.date+p.s;
+        const done=doneSet.has(id);
+        const isToday=p.date===today;
+        html+=`<div class="post-card type-${p.type}${done?' done':''}${isToday?' today':''}" id="card-${id}">
+          <div class="card-header">
+            <span class="type-dot dot-${p.type}"></span>
+            <span class="type-label label-${p.type}">${TYPES[p.type].label}</span>
+            <span class="session-badge ${p.s==='AM'?'badge-am':'badge-pm'}">${p.s}</span>
+          </div>
+          <div class="post-date">${formatDate(p.date)}</div>
+          <div class="post-headline">${p.h}</div>
+          <div class="post-content" id="content-${id}">${p.c.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+          <div class="card-actions">
+            <button class="btn-sm btn-expand" onclick="toggleContent('${id}')">👁 Xem</button>
+            <button class="btn-sm btn-copy" onclick="copyPost('${id}')">📋 Copy</button>
+            <button class="btn-sm btn-done" onclick="toggleDone('${id}')">${done?'↩ Bỏ':'✓ Đã đăng'}</button>
+          </div>
+        </div>`;
+      });
+      html+='</div></div>';
+    });
+    html+='</div>';
+  });
+
+  document.getElementById('content').innerHTML=html;
+}
+
+function toggleContent(id){
+  const el=document.getElementById('content-'+id);
+  el.classList.toggle('expanded');
+}
+
+function copyPost(id){
+  const p=S.find(x=>x.date+x.s===id);
+  if(!p) return;
+  navigator.clipboard.writeText(p.h+'\n\n'+p.c).then(()=>{
+    const btn=event.target;
+    btn.textContent='✅ Copied!';
+    setTimeout(()=>btn.textContent='📋 Copy',1500);
+  });
+}
+
+function toggleDone(id){
+  if(doneSet.has(id)) doneSet.delete(id);
+  else doneSet.add(id);
+  saveState();
+  document.getElementById('card-'+id)?.classList.toggle('done');
+  const btn=document.querySelector(`#card-${id} .btn-done`);
+  if(btn) btn.textContent=doneSet.has(id)?'↩ Bỏ':'✓ Đã đăng';
+  updateStats();
+}
+
+// INIT
+buildFilterBar();
+renderContent();
+updateStats();
+</script>
+</body>
+</html>
